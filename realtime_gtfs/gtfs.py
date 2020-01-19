@@ -9,6 +9,7 @@ import sqlalchemy
 from sqlalchemy import MetaData, Column, String, Table
 
 from realtime_gtfs.agency import Agency
+from realtime_gtfs.stop import Stop
 
 class GTFS():
     """
@@ -19,6 +20,7 @@ class GTFS():
     """
     def __init__(self, url):
         self.agencies = []
+        self.stops = []
         self.connection = sqlalchemy.create_engine(url)
         meta = MetaData()
         Table(
@@ -54,6 +56,7 @@ class GTFS():
         zip_file: ZipFile containing the GTFS data
         """
         self.parse_agencies(zip_file.read("agency.txt"))
+        self.parse_stops(zip_file.read("stops.txt"))
 
     def parse_agencies(self, agencies):
         """
@@ -65,3 +68,14 @@ class GTFS():
         agency_info = [line.split(',') for line in str(agencies, "UTF-8").strip().split('\n')]
         for line in agency_info[1:]:
             self.agencies.append(Agency.from_gtfs(agency_info[0], line))
+
+    def parse_stops(self, stops):
+        """
+        parse_stops: read stops.txt
+
+        Arguments:
+        stops: bytes-like object contianing the contents of `stops.txt`
+        """
+        stop_info = [line.split(',') for line in str(stops, "UTF-8").strip().split('\n')]
+        for line in stop_info[1:]:
+            self.stops.append(Stop.from_gtfs(stop_info[0], line))
