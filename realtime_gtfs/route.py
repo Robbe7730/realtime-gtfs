@@ -1,5 +1,5 @@
 """
-stop.py: contains data relevant to stop.txt
+route.py: contains data relevant to routes.txt
 """
 
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
@@ -106,7 +106,7 @@ class Route():
     def setkey(self, key, value):
         """
         Sets a class attribute depending on `key`, raising
-        InvalidKeyError if the key does not belong on stop
+        InvalidKeyError if the key does not belong on route
 
         Arguments:
         key, value: the key and value

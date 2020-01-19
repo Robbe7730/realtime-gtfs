@@ -1,5 +1,5 @@
 """
-stop.py: contains data relevant to stop.txt
+stop.py: contains data relevant to stops.txt
 """
 
 import pytz
