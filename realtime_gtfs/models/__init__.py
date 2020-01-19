@@ -4,6 +4,7 @@ realtime_gtfs.models: contains models for GTFS data
 
 from .agency import Agency
 from .fare_attribute import FareAttribute
+from .fare_rule import FareRule
 from .route import Route
 from .service import Service
 from .service_exception import ServiceException

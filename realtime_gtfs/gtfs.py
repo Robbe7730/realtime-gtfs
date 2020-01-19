@@ -9,7 +9,7 @@ import sqlalchemy
 from sqlalchemy import MetaData, Column, String, Table
 
 from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
-                                  ServiceException, FareAttribute)
+                                  ServiceException, FareAttribute, FareRule)
 
 from realtime_gtfs.exceptions import InvalidURLError
 
@@ -26,6 +26,7 @@ class GTFS():
         self.services = []
         self.service_exceptions = []
         self.fare_attributes = []
+        self.fare_rules = []
         self.connection = None
         self.zip_file = None
         self.zip_file_url = ""
@@ -100,6 +101,8 @@ class GTFS():
             self.parse_calendar_dates(zip_file.read("calendar_dates.txt"))
         if "fare_attributes.txt" in zip_file.namelist():
             self.parse_fare_attributes(zip_file.read("fare_attributes.txt"))
+        if "fare_rules.txt" in zip_file.namelist():
+            self.parse_fare_rules(zip_file.read("fare_rules.txt"))
 
     def parse_agencies(self, agencies):
         """
@@ -207,3 +210,16 @@ class GTFS():
         ]
         for line in fare_attribute_info[1:]:
             self.fare_attributes.append(FareAttribute.from_gtfs(fare_attribute_info[0], line))
+
+    def parse_fare_rules(self, fare_rule):
+        """
+        parse_fare_rules: read fare_rules.txt
+
+        Arguments:
+        fare_rule: bytes-like object containing the contents of `fare_rules.txt`
+        """
+        fare_rule_info = [
+            line.strip().split(',') for line in str(fare_rule, "UTF-8").strip().split('\n')
+        ]
+        for line in fare_rule_info[1:]:
+            self.fare_rules.append(FareRule.from_gtfs(fare_rule_info[0], line))
