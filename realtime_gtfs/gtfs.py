@@ -8,7 +8,9 @@ import requests
 import sqlalchemy
 from sqlalchemy import MetaData, Column, String, Table
 
-from realtime_gtfs.models import Agency, Route, Stop, Trip, StopTime
+from realtime_gtfs.models import Agency, Route, Stop, Trip, StopTime, Service
+
+from realtime_gtfs.exceptions import InvalidURLError
 
 class GTFS():
     """
@@ -20,7 +22,10 @@ class GTFS():
         self.routes = []
         self.trips = []
         self.stop_times = []
+        self.calendars = []
         self.connection = None
+        self.zip_file = None
+        self.zip_file_url = ""
 
     def write_to_db(self, url):
         """
@@ -41,20 +46,37 @@ class GTFS():
         meta.create_all(self.connection)
 
     # GTFS reading
-    def from_url(self, url):
+    def get_zip(self, url):
         """
-        from_url: initialize a gtfs object from a URL. Zip file is only stored in a tempfile.
+        get_zip: download zip from url, returns tempfile with zip
 
         Arguments:
-        url: URL to realtime GTFS data
+        url: URL to static GTFS data
         """
-        response = requests.get(url)
-        if response.status_code == 200:
-            with tempfile.TemporaryFile() as temp_zip_file:
-                for chunk in response.iter_content(chunk_size=128):
-                    temp_zip_file.write(chunk)
-                with zipfile.ZipFile(temp_zip_file) as zip_file:
-                    self.from_zip(zip_file)
+        if self.zip_file is None or url != self.zip_file_url:
+            response = requests.get(url)
+
+            if response.status_code != 200:
+                raise InvalidURLError(url)
+
+            temp_zip_file = tempfile.TemporaryFile()
+            for chunk in response.iter_content(chunk_size=128):
+                temp_zip_file.write(chunk)
+            self.zip_file = zipfile.ZipFile(temp_zip_file)
+
+        return self.zip_file
+
+
+    def from_url(self, url):
+        """
+        from_url: initialize a gtfs object from a URL.
+
+        Arguments:
+        url: URL to static GTFS data
+        """
+        zip_file = self.get_zip(url)
+        self.from_zip(zip_file)
+        zip_file.close()
 
     def from_zip(self, zip_file):
         """
@@ -68,6 +90,8 @@ class GTFS():
         self.parse_routes(zip_file.read("routes.txt"))
         self.parse_trips(zip_file.read("trips.txt"))
         self.parse_stop_times(zip_file.read("stop_times.txt"))
+        if "calendar.txt" in zip_file.namelist():
+            self.parse_calendar(zip_file.read("calendar.txt"))
 
     def parse_agencies(self, agencies):
         """
@@ -140,3 +164,14 @@ class GTFS():
         stop_time_info = [line.split(',') for line in str(stop_times, "UTF-8").strip().split('\n')]
         for line in stop_time_info[1:]:
             self.stop_times.append(StopTime.from_gtfs(stop_time_info[0], line))
+
+    def parse_calendar(self, calendar):
+        """
+        parse_calendar: read calendar.txt
+
+        Arguments:
+        calendar: bytes-like object containing the contents of `calendar.txt`
+        """
+        calendar_info = [line.split(',') for line in str(calendar, "UTF-8").strip().split('\n')]
+        for line in calendar_info[1:]:
+            self.calendars.append(Service.from_gtfs(calendar_info[0], line))

@@ -25,3 +25,11 @@ class MissingKeyError(RuntimeError):
     def __init__(self, arg):
         self.args = ["Missing key " + arg]
         RuntimeError.__init__(self)
+
+class InvalidURLError(RuntimeError):
+    """
+    InvalidURLError: raised when a URL could not be loaded
+    """
+    def __init__(self, arg):
+        self.args = ["Invalid URL: " + arg]
+        RuntimeError.__init__(self)
