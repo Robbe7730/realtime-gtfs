@@ -4,7 +4,7 @@ test_route.py: tests for realtime_gtfs/route.py
 
 import pytest
 
-from realtime_gtfs.route import Route
+from realtime_gtfs.models import Route
 from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError, InvalidValueError
 
 MINIMAL_ROUTE_DICT = {

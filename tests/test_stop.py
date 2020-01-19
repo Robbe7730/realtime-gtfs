@@ -5,7 +5,7 @@ test_stop.py: tests for realtime_gtfs/stop.py
 import pytz
 import pytest
 
-from realtime_gtfs.stop import Stop
+from realtime_gtfs.models import Stop
 from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError, InvalidValueError
 
 MINIMAL_STOP_DICT = {

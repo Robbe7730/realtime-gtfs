@@ -4,7 +4,7 @@ test_trip.py: tests for realtime_gtfs/trip.py
 
 import pytest
 
-from realtime_gtfs.trip import Trip
+from realtime_gtfs.models import Trip
 from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError, InvalidValueError
 
 MINIMAL_TRIP_DICT = {

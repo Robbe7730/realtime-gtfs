@@ -8,10 +8,7 @@ import requests
 import sqlalchemy
 from sqlalchemy import MetaData, Column, String, Table
 
-from realtime_gtfs.agency import Agency
-from realtime_gtfs.stop import Stop
-from realtime_gtfs.route import Route
-from realtime_gtfs.trip import Trip
+from realtime_gtfs.models import Agency, Route, Stop, Trip
 
 class GTFS():
     """

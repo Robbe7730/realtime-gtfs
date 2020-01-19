@@ -5,7 +5,7 @@ test_agency: tests for realtime_gtfs/agency.py
 import pytz
 import pytest
 
-from realtime_gtfs.agency import Agency
+from realtime_gtfs.models import Agency
 from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError
 
 MINIMAL_AGENCY_DICT = {
