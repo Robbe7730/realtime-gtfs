@@ -65,7 +65,7 @@ class Route():
 
     def verify(self):
         """
-        Verify that the Route has at least the required keys, lat and lon are correct
+        Verify that the Route has at least the required keys and correct values
         """
         # TODO: verify agency_id,
         if self.route_id is None:
