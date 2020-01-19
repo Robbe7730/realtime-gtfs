@@ -8,6 +8,7 @@ from .fare_rule import FareRule
 from .route import Route
 from .service import Service
 from .service_exception import ServiceException
+from .shape import Shape
 from .stop import Stop
 from .stop_time import StopTime
 from .trip import Trip

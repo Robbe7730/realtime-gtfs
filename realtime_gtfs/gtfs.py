@@ -9,7 +9,7 @@ import sqlalchemy
 from sqlalchemy import MetaData, Column, String, Table
 
 from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
-                                  ServiceException, FareAttribute, FareRule)
+                                  ServiceException, FareAttribute, FareRule, Shape)
 
 from realtime_gtfs.exceptions import InvalidURLError
 
@@ -27,6 +27,7 @@ class GTFS():
         self.service_exceptions = []
         self.fare_attributes = []
         self.fare_rules = []
+        self.shapes = []
         self.connection = None
         self.zip_file = None
         self.zip_file_url = ""
@@ -103,6 +104,8 @@ class GTFS():
             self.parse_fare_attributes(zip_file.read("fare_attributes.txt"))
         if "fare_rules.txt" in zip_file.namelist():
             self.parse_fare_rules(zip_file.read("fare_rules.txt"))
+        if "shapes.txt" in zip_file.namelist():
+            self.parse_shapes(zip_file.read("shapes.txt"))
 
     def parse_agencies(self, agencies):
         """
@@ -223,3 +226,16 @@ class GTFS():
         ]
         for line in fare_rule_info[1:]:
             self.fare_rules.append(FareRule.from_gtfs(fare_rule_info[0], line))
+
+    def parse_shapes(self, shape):
+        """
+        parse_shapes: read shapes.txt
+
+        Arguments:
+        shape: bytes-like object containing the contents of `shapes.txt`
+        """
+        shape_info = [
+            line.strip().split(',') for line in str(shape, "UTF-8").strip().split('\n')
+        ]
+        for line in shape_info[1:]:
+            self.shapes.append(Shape.from_gtfs(shape_info[0], line))
