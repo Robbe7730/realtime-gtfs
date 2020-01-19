@@ -22,7 +22,7 @@ ENUM_WHEELCHAIR_BOARDING = [
 
 class Stop():
     """
-    stop: class for agencies
+    stop: class for stops
     """
     def __init__(self):
         self.stop_id = None
