@@ -12,4 +12,5 @@ from .service_exception import ServiceException
 from .shape import Shape
 from .stop import Stop
 from .stop_time import StopTime
+from .transfer import Transfer
 from .trip import Trip
