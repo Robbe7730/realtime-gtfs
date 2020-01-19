@@ -8,7 +8,8 @@ import requests
 import sqlalchemy
 from sqlalchemy import MetaData, Column, String, Table
 
-from realtime_gtfs.models import Agency, Route, Stop, Trip, StopTime, Service, ServiceException
+from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
+                                  ServiceException, FareAttribute)
 
 from realtime_gtfs.exceptions import InvalidURLError
 
@@ -24,6 +25,7 @@ class GTFS():
         self.stop_times = []
         self.services = []
         self.service_exceptions = []
+        self.fare_attributes = []
         self.connection = None
         self.zip_file = None
         self.zip_file_url = ""
@@ -96,6 +98,8 @@ class GTFS():
             self.parse_calendar(zip_file.read("calendar.txt"))
         if "calendar_dates.txt" in zip_file.namelist():
             self.parse_calendar_dates(zip_file.read("calendar_dates.txt"))
+        if "fare_attributes.txt" in zip_file.namelist():
+            self.parse_fare_attributes(zip_file.read("fare_attributes.txt"))
 
     def parse_agencies(self, agencies):
         """
@@ -104,7 +108,8 @@ class GTFS():
         Arguments:
         agencies: bytes-like object containing the contents of `agency.txt`
         """
-        agency_info = [line.split(',') for line in str(agencies, "UTF-8").strip().split('\n')]
+        agency_info = [line.strip().split(',') for line in
+                       str(agencies, "UTF-8").strip().split('\n')]
         for line in agency_info[1:]:
             self.agencies.append(Agency.from_gtfs(agency_info[0], line))
 
@@ -115,7 +120,7 @@ class GTFS():
         Arguments:
         stops: bytes-like object containing the contents of `stops.txt`
         """
-        stop_info = [line.split(',') for line in str(stops, "UTF-8").strip().split('\n')]
+        stop_info = [line.strip().split(',') for line in str(stops, "UTF-8").strip().split('\n')]
         for line in stop_info[1:]:
             self.stops.append(Stop.from_gtfs(stop_info[0], line))
 
@@ -126,7 +131,7 @@ class GTFS():
         Arguments:
         routes: bytes-like object containing the contents of `routes.txt`
         """
-        stop_info = [line.split(',') for line in str(routes, "UTF-8").strip().split('\n')]
+        stop_info = [line.strip().split(',') for line in str(routes, "UTF-8").strip().split('\n')]
 
         for line in stop_info[1:]:
             self.routes.append(Route.from_gtfs(stop_info[0], line))
@@ -138,7 +143,8 @@ class GTFS():
         Arguments:
         trips: bytes-like object containing the contents of `trips.txt`
         """
-        trip_info = [line.split(',') for line in str(trips, "UTF-8").strip().split('\n')]
+        trip_info = [line.strip().split(',') for line in
+                     str(trips, "UTF-8").strip().split('\n')]
 
         # ------ v UGLY FIX FOR NMBS DATA v ------
 
@@ -159,7 +165,8 @@ class GTFS():
         Arguments:
         stop_times: bytes-like object containing the contents of `stop_times.txt`
         """
-        stop_time_info = [line.split(',') for line in str(stop_times, "UTF-8").strip().split('\n')]
+        stop_time_info = [line.strip().split(',') for line in
+                          str(stop_times, "UTF-8").strip().split('\n')]
         for line in stop_time_info[1:]:
             self.stop_times.append(StopTime.from_gtfs(stop_time_info[0], line))
 
@@ -170,7 +177,8 @@ class GTFS():
         Arguments:
         calendar: bytes-like object containing the contents of `calendar.txt`
         """
-        calendar_info = [line.split(',') for line in str(calendar, "UTF-8").strip().split('\n')]
+        calendar_info = [line.strip().split(',') for line in
+                         str(calendar, "UTF-8").strip().split('\n')]
         for line in calendar_info[1:]:
             self.services.append(Service.from_gtfs(calendar_info[0], line))
 
@@ -182,7 +190,20 @@ class GTFS():
         calendar_dates: bytes-like object containing the contents of `calendar_dates.txt`
         """
         calendar_dates_info = [
-            line.split(',') for line in str(calendar_dates, "UTF-8").strip().split('\n')
+            line.strip().split(',') for line in str(calendar_dates, "UTF-8").strip().split('\n')
         ]
         for line in calendar_dates_info[1:]:
             self.service_exceptions.append(ServiceException.from_gtfs(calendar_dates_info[0], line))
+
+    def parse_fare_attributes(self, fare_attribute):
+        """
+        parse_fare_attributes: read fare_attributes.txt
+
+        Arguments:
+        fare_attribute: bytes-like object containing the contents of `fare_attributes.txt`
+        """
+        fare_attribute_info = [
+            line.strip().split(',') for line in str(fare_attribute, "UTF-8").strip().split('\n')
+        ]
+        for line in fare_attribute_info[1:]:
+            self.fare_attributes.append(FareAttribute.from_gtfs(fare_attribute_info[0], line))
