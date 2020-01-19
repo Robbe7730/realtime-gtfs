@@ -87,6 +87,15 @@ def test_representation():
     assert str(MINIMAL_AGENCY) != ""
     assert repr(MINIMAL_AGENCY) != ""
 
+def test_empty_value():
+    """
+    test_empty_value: test if it doesn't overwrite values with empty string
+    """
+    temp_dict = MINIMAL_AGENCY_DICT.copy()
+    temp_dict["agency_name"] = ""
+    with pytest.raises(MissingKeyError):
+        Agency.from_gtfs(temp_dict.keys(), temp_dict.values())
+
 # pylint: disable=comparison-with-itself
 def test_equal():
     """

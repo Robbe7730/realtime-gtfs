@@ -63,6 +63,7 @@ class GTFS():
             for chunk in response.iter_content(chunk_size=128):
                 temp_zip_file.write(chunk)
             self.zip_file = zipfile.ZipFile(temp_zip_file)
+            self.zip_file_url = url
 
         return self.zip_file
 

@@ -151,6 +151,15 @@ def test_representation():
     assert str(MINIMAL_STOP) != ""
     assert repr(MINIMAL_STOP) != ""
 
+def test_empty_value():
+    """
+    test_empty_value: test if it doesn't overwrite values with empty string
+    """
+    temp_dict = MINIMAL_STOP_DICT.copy()
+    temp_dict["stop_id"] = ""
+    with pytest.raises(MissingKeyError):
+        Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
+
 # pylint: disable=comparison-with-itself
 def test_equal():
     """

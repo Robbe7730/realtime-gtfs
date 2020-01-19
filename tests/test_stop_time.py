@@ -141,6 +141,15 @@ def test_representation():
     assert str(MINIMAL_STOP_TIME) != ""
     assert repr(MINIMAL_STOP_TIME) != ""
 
+def test_empty_value():
+    """
+    test_empty_value: test if it doesn't overwrite values with empty string
+    """
+    temp_dict = MINIMAL_STOP_TIME_DICT.copy()
+    temp_dict["stop_id"] = ""
+    with pytest.raises(MissingKeyError):
+        StopTime.from_gtfs(temp_dict.keys(), temp_dict.values())
+
 # pylint: disable=comparison-with-itself
 def test_equal():
     """

@@ -137,6 +137,15 @@ def test_representation():
     assert str(MINIMAL_ROUTE) != ""
     assert repr(MINIMAL_ROUTE) != ""
 
+def test_empty_value():
+    """
+    test_empty_value: test if it doesn't overwrite values with empty string
+    """
+    temp_dict = MINIMAL_ROUTE_DICT.copy()
+    temp_dict["route_id"] = ""
+    with pytest.raises(MissingKeyError):
+        Route.from_gtfs(temp_dict.keys(), temp_dict.values())
+
 # pylint: disable=comparison-with-itself
 def test_equal():
     """

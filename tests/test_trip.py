@@ -120,6 +120,15 @@ def test_representation():
     assert str(MINIMAL_TRIP) != ""
     assert repr(MINIMAL_TRIP) != ""
 
+def test_empty_value():
+    """
+    test_empty_value: test if it doesn't overwrite values with empty string
+    """
+    temp_dict = MINIMAL_TRIP_DICT.copy()
+    temp_dict["route_id"] = ""
+    with pytest.raises(MissingKeyError):
+        Trip.from_gtfs(temp_dict.keys(), temp_dict.values())
+
 # pylint: disable=comparison-with-itself
 def test_equal():
     """
