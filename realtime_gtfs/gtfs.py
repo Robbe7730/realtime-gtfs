@@ -10,6 +10,7 @@ from sqlalchemy import MetaData, Column, String, Table
 
 from realtime_gtfs.agency import Agency
 from realtime_gtfs.stop import Stop
+from realtime_gtfs.route import Route
 
 class GTFS():
     """
@@ -18,6 +19,7 @@ class GTFS():
     def __init__(self):
         self.agencies = []
         self.stops = []
+        self.routes = []
         self.connection = None
 
     def write_to_db(self, url):
@@ -63,6 +65,7 @@ class GTFS():
         """
         self.parse_agencies(zip_file.read("agency.txt"))
         self.parse_stops(zip_file.read("stops.txt"))
+        self.parse_routes(zip_file.read("routes.txt"))
 
     def parse_agencies(self, agencies):
         """
@@ -85,3 +88,22 @@ class GTFS():
         stop_info = [line.split(',') for line in str(stops, "UTF-8").strip().split('\n')]
         for line in stop_info[1:]:
             self.stops.append(Stop.from_gtfs(stop_info[0], line))
+
+    def parse_routes(self, routes):
+        """
+        parse_routes: read routes.txt
+
+        Arguments:
+        routes: bytes-like object contianing the contents of `routes.txt`
+        """
+        stop_info = [line.split(',') for line in str(routes, "UTF-8").strip().split('\n')]
+
+        # ------ v UGLY FIX FOR NMBS DATA v ------
+
+        for line in stop_info[1:]:
+            line[5] = line[5][0]
+
+        # ------ ^ UGLY FIX FOR NMBS DATA ^ ------
+
+        for line in stop_info[1:]:
+            self.routes.append(Route.from_gtfs(stop_info[0], line))

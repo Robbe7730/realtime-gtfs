@@ -4,7 +4,7 @@ stop.py: contains data relevant to stop.txt
 
 import pytz
 
-from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError
+from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 
 ENUM_LOCATION_TYPE = [
@@ -90,17 +90,17 @@ class Stop():
         if (self.parent_station is not None and
                 self.parent_station != "" and
                 self.location_type == 1):
-            raise InvalidKeyError("parent_station")
+            raise MissingKeyError("parent_station")
 
         if self.stop_lon < -180 or self.stop_lon > 180:
-            raise InvalidKeyError("stop_lon")
+            raise InvalidValueError("stop_lon")
         if self.stop_lat < -90 or self.stop_lat > 90:
-            raise InvalidKeyError("stop_lat")
+            raise InvalidValueError("stop_lat")
         if self.location_type < 0 or self.location_type >= len(ENUM_LOCATION_TYPE):
-            raise InvalidKeyError("location_type")
+            raise InvalidValueError("location_type")
         if (self.wheelchair_boarding < 0 or
                 self.wheelchair_boarding >= len(ENUM_WHEELCHAIR_BOARDING)):
-            raise InvalidKeyError("wheelchair_boarding")
+            raise InvalidValueError("wheelchair_boarding")
 
         return True
 
@@ -112,6 +112,8 @@ class Stop():
         Arguments:
         key, value: the key and value
         """
+        if value == "":
+            return
         if key == "stop_id":
             self.stop_id = value
         elif key == "stop_code":

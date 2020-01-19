@@ -6,7 +6,7 @@ import pytz
 import pytest
 
 from realtime_gtfs.stop import Stop
-from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError
+from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError, InvalidValueError
 
 MINIMAL_STOP_DICT = {
     "stop_id": "minimal_stop",
@@ -90,7 +90,7 @@ def test_missing_key():
     temp_dict = MINIMAL_STOP_DICT.copy()
     temp_dict["location_type"] = 1
     temp_dict["parent_station"] = 123
-    with pytest.raises(InvalidKeyError):
+    with pytest.raises(MissingKeyError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
 def test_invalid_values():
@@ -99,33 +99,33 @@ def test_invalid_values():
     """
     temp_dict = MINIMAL_STOP_DICT.copy()
     temp_dict["stop_lat"] = "-100"
-    with pytest.raises(InvalidKeyError):
+    with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
     temp_dict = MINIMAL_STOP_DICT.copy()
     temp_dict["stop_lon"] = "-200"
-    with pytest.raises(InvalidKeyError):
+    with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
     temp_dict = MINIMAL_STOP_DICT.copy()
     temp_dict["location_type"] = "-1"
-    with pytest.raises(InvalidKeyError):
+    with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
     temp_dict = MINIMAL_STOP_DICT.copy()
     temp_dict["location_type"] = "5"
     temp_dict["parent_station"] = "456"
-    with pytest.raises(InvalidKeyError):
+    with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
     temp_dict = MINIMAL_STOP_DICT.copy()
     temp_dict["wheelchair_boarding"] = "-1"
-    with pytest.raises(InvalidKeyError):
+    with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
     temp_dict = MINIMAL_STOP_DICT.copy()
     temp_dict["wheelchair_boarding"] = "3"
-    with pytest.raises(InvalidKeyError):
+    with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
 def test_default():

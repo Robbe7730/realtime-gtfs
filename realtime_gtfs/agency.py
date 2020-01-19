@@ -73,6 +73,8 @@ class Agency():
         Arguments:
         key, value: the key and value
         """
+        if value == "":
+            return
         if key == "agency_id":
             self.agency_id = value
         elif key == "agency_name":
