@@ -13,6 +13,7 @@ MYSQL_URL = "mysql://delaymap:Treinen@localhost:3306/DelayMap"
 SQLITE_URL = "sqlite:///:memory:"
 
 @pytest.mark.xfail
+@pytest.mark.slow
 def test_from_url_mysql():
     """
     test_from_url_mysql: test if creation of GTFS works with
@@ -23,6 +24,7 @@ def test_from_url_mysql():
     test_gtfs.from_url(GTFS_URL)
     test_gtfs.write_to_db(MYSQL_URL)
 
+@pytest.mark.slow
 def test_from_url_sqlite():
     """
     test_from_url_sqlite: test if creation of GTFS works with
@@ -32,6 +34,7 @@ def test_from_url_sqlite():
     test_gtfs.from_url(GTFS_URL)
     test_gtfs.write_to_db(SQLITE_URL)
 
+@pytest.mark.slow
 def test_from_zip():
     """
     test_from_zip: test if creation of GTFS works from a zip
