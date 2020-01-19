@@ -93,6 +93,8 @@ def test_invalid_values():
     temp_dict["transfers"] = "6"
     with pytest.raises(InvalidValueError):
         FareAttribute.from_gtfs(temp_dict.keys(), temp_dict.values())
+    del temp_dict["transfers"]
+    FareAttribute.from_gtfs(temp_dict.keys(), temp_dict.values())
 
     temp_dict = FULL_FA_DICT.copy()
     temp_dict["transfer_duration"] = "-2"
