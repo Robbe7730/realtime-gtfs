@@ -1,5 +1,5 @@
 """
-calendar.py: contains data relevant to calendar.txt
+service.py: contains data relevant to calendar.txt
 """
 
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError

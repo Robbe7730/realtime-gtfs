@@ -8,7 +8,7 @@ import requests
 import sqlalchemy
 from sqlalchemy import MetaData, Column, String, Table
 
-from realtime_gtfs.models import Agency, Route, Stop, Trip, StopTime, Service
+from realtime_gtfs.models import Agency, Route, Stop, Trip, StopTime, Service, ServiceException
 
 from realtime_gtfs.exceptions import InvalidURLError
 
@@ -22,7 +22,8 @@ class GTFS():
         self.routes = []
         self.trips = []
         self.stop_times = []
-        self.calendars = []
+        self.services = []
+        self.service_exceptions = []
         self.connection = None
         self.zip_file = None
         self.zip_file_url = ""
@@ -93,6 +94,8 @@ class GTFS():
         self.parse_stop_times(zip_file.read("stop_times.txt"))
         if "calendar.txt" in zip_file.namelist():
             self.parse_calendar(zip_file.read("calendar.txt"))
+        if "calendar_dates.txt" in zip_file.namelist():
+            self.parse_calendar_dates(zip_file.read("calendar_dates.txt"))
 
     def parse_agencies(self, agencies):
         """
@@ -175,4 +178,17 @@ class GTFS():
         """
         calendar_info = [line.split(',') for line in str(calendar, "UTF-8").strip().split('\n')]
         for line in calendar_info[1:]:
-            self.calendars.append(Service.from_gtfs(calendar_info[0], line))
+            self.services.append(Service.from_gtfs(calendar_info[0], line))
+
+    def parse_calendar_dates(self, calendar_dates):
+        """
+        parse_calendar_dates: read calendar_dates.txt
+
+        Arguments:
+        calendar_dates: bytes-like object containing the contents of `calendar_dates.txt`
+        """
+        calendar_dates_info = [
+            line.split(',') for line in str(calendar_dates, "UTF-8").strip().split('\n')
+        ]
+        for line in calendar_dates_info[1:]:
+            self.service_exceptions.append(ServiceException.from_gtfs(calendar_dates_info[0], line))
