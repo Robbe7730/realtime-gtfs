@@ -18,13 +18,15 @@ def test_gtfs_from_url_mysql():
     MySQL database, expected to fail if no mysql database with the
     given parameters exists.
     """
-    test_gtfs = gtfs.GTFS(MYSQL_URL)
+    test_gtfs = gtfs.GTFS()
     test_gtfs.from_url(GTFS_URL)
+    test_gtfs.write_to_db(MYSQL_URL)
 
 def test_gtfs_from_url_sqlite():
     """
     test_gtfs_from_url_sqlite: test if creation of GTFS works with
     in-memory SQLite database.
     """
-    test_gtfs = gtfs.GTFS(SQLITE_URL)
+    test_gtfs = gtfs.GTFS()
     test_gtfs.from_url(GTFS_URL)
+    test_gtfs.write_to_db(SQLITE_URL)

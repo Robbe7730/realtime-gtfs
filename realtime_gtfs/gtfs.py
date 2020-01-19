@@ -13,14 +13,20 @@ from realtime_gtfs.stop import Stop
 
 class GTFS():
     """
-    GTFS: main class for GTFS connection
-
-    Arguments:
-    url: URL for database connection
+    GTFS: main GTFS class
     """
-    def __init__(self, url):
+    def __init__(self):
         self.agencies = []
         self.stops = []
+        self.connection = None
+
+    def write_to_db(self, url):
+        """
+        write_to_db: write GTFS data to database
+
+        Arguments:
+        url: URL for database connection
+        """
         self.connection = sqlalchemy.create_engine(url)
         meta = MetaData()
         Table(
