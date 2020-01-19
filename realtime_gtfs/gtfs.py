@@ -128,13 +128,6 @@ class GTFS():
         """
         stop_info = [line.split(',') for line in str(routes, "UTF-8").strip().split('\n')]
 
-        # ------ v UGLY FIX FOR NMBS DATA v ------
-
-        for line in stop_info[1:]:
-            line[5] = line[5][0]
-
-        # ------ ^ UGLY FIX FOR NMBS DATA ^ ------
-
         for line in stop_info[1:]:
             self.routes.append(Route.from_gtfs(stop_info[0], line))
 
@@ -149,8 +142,9 @@ class GTFS():
 
         # ------ v UGLY FIX FOR NMBS DATA v ------
 
-        for line in trip_info[1:]:
-            del line[-1]
+        if trip_info[0][-1] == "trip_type":
+            for line in trip_info[1:]:
+                del line[-1]
 
         # ------ ^ UGLY FIX FOR NMBS DATA ^ ------
 

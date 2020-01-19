@@ -80,6 +80,15 @@ def test_invalid_values():
         Route.from_gtfs(temp_dict.keys(), temp_dict.values())
 
     temp_dict = MINIMAL_ROUTE_DICT.copy()
+    temp_dict["route_type"] = "700"
+    Route.from_gtfs(temp_dict.keys(), temp_dict.values())
+
+    temp_dict = MINIMAL_ROUTE_DICT.copy()
+    temp_dict["route_type"] = "1701"
+    with pytest.raises(InvalidValueError):
+        Route.from_gtfs(temp_dict.keys(), temp_dict.values())
+
+    temp_dict = MINIMAL_ROUTE_DICT.copy()
     temp_dict["route_color"] = "GREEN"
     with pytest.raises(InvalidValueError):
         Route.from_gtfs(temp_dict.keys(), temp_dict.values())
