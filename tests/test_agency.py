@@ -1,7 +1,12 @@
-from realtime_gtfs.agency import Agency
-from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError
+"""
+test_agency: tests for realtime_gtfs/agency.py
+"""
+
 import pytz
 import pytest
+
+from realtime_gtfs.agency import Agency
+from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError
 
 MINIMAL_AGENCY_DICT = {
     "agency_id": "Minimal",
@@ -25,20 +30,32 @@ MINIMAL_AGENCY = Agency.from_dict(MINIMAL_AGENCY_DICT)
 FULL_AGENCY = Agency.from_dict(FULL_AGENCY_DICT)
 
 def test_agency_happyflow_minimal():
+    """
+    test_agency_happyflow_minimal: minimal, correct example
+    """
     agency = Agency.from_gtfs(MINIMAL_AGENCY_DICT.keys(), MINIMAL_AGENCY_DICT.values())
-    assert(agency == MINIMAL_AGENCY)
+    assert agency == MINIMAL_AGENCY
 
 def test_agency_happyflow_full():
+    """
+    test_agency_happyflow_full: full, correct example
+    """
     agency = Agency.from_gtfs(FULL_AGENCY_DICT.keys(), FULL_AGENCY_DICT.values())
-    assert(agency == FULL_AGENCY)
+    assert agency == FULL_AGENCY
 
 def test_invalid_timezone():
+    """
+    test_invalid_timezone: check if it raises UnknownTimeZoneError when given an invalid timezone
+    """
     temp_dict = MINIMAL_AGENCY_DICT.copy()
     temp_dict["agency_timezone"] = "MiddleEarth/Shire"
     with pytest.raises(pytz.exceptions.UnknownTimeZoneError):
         Agency.from_gtfs(temp_dict.keys(), temp_dict.values())
 
 def test_missing_key():
+    """
+    test_missing_key: check if it errors if a required key is missing
+    """
     temp_dict = MINIMAL_AGENCY_DICT.copy()
     del temp_dict["agency_name"]
     with pytest.raises(MissingKeyError):
@@ -55,18 +72,28 @@ def test_missing_key():
         Agency.from_gtfs(temp_dict.keys(), temp_dict.values())
 
 def test_invalid_key():
+    """
+    test_invalid_key: test if it errors if an invalid key is passed
+    """
     temp_dict = MINIMAL_AGENCY_DICT.copy()
     temp_dict["agency_favorite_food"] = "Pizza"
     with pytest.raises(InvalidKeyError):
         Agency.from_gtfs(temp_dict.keys(), temp_dict.values())
 
 def test_representation():
-    assert(str(MINIMAL_AGENCY) != "")
-    assert(repr(MINIMAL_AGENCY) != "")
+    """
+    test_representation: check if __str__ and __repr__ are defined
+    """
+    assert str(MINIMAL_AGENCY) != ""
+    assert repr(MINIMAL_AGENCY) != ""
 
+# pylint: disable=comparison-with-itself
 def test_equal():
-    assert(MINIMAL_AGENCY == MINIMAL_AGENCY)
-    assert(MINIMAL_AGENCY != FULL_AGENCY)
-    assert(FULL_AGENCY != MINIMAL_AGENCY)
-    assert(FULL_AGENCY == FULL_AGENCY)
-    assert(MINIMAL_AGENCY != "MINIMAL_AGENCY")
+    """
+    test_equal: check if __eq__ functions
+    """
+    assert MINIMAL_AGENCY == MINIMAL_AGENCY
+    assert MINIMAL_AGENCY != FULL_AGENCY
+    assert FULL_AGENCY != MINIMAL_AGENCY
+    assert FULL_AGENCY == FULL_AGENCY
+    assert MINIMAL_AGENCY != "MINIMAL_AGENCY"

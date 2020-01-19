@@ -1,20 +1,30 @@
-import requests
+"""
+gtfs.py: contains main class GTFS
+"""
+
 import tempfile
 import zipfile
+import requests
 import sqlalchemy
 from sqlalchemy import MetaData, Column, String, Table
 
 from realtime_gtfs.agency import Agency
 
-class GTFS(object):
+class GTFS():
+    """
+    GTFS: main class for GTFS connection
+
+    Arguments:
+    url: URL for database connection
+    """
     def __init__(self, url):
         self.agencies = []
         self.connection = sqlalchemy.create_engine(url)
         meta = MetaData()
-        agency_table = Table(
-            'agencies', meta, 
-            Column('agency_id', String(length=255), primary_key = True), 
-            Column('agency_name', String(length=255)), 
+        Table(
+            'agencies', meta,
+            Column('agency_id', String(length=255), primary_key=True),
+            Column('agency_name', String(length=255)),
             Column('agency_url', String(length=255)),
             Column('agency_timezone', String(length=255)),
         )
@@ -22,6 +32,12 @@ class GTFS(object):
 
     # GTFS reading
     def from_url(self, url):
+        """
+        from_url: initialize a gtfs object from a URL. Zip file is only stored in a tempfile.
+
+        Arguments:
+        url: URL to realtime GTFS data
+        """
         response = requests.get(url)
         if response.status_code == 200:
             with tempfile.TemporaryFile() as temp_zip_file:
@@ -31,9 +47,21 @@ class GTFS(object):
                     self.from_zip(zip_file)
 
     def from_zip(self, zip_file):
+        """
+        from_zip: initialize a gtfs object from a zip file.
+
+        Arguments:
+        zip_file: ZipFile containing the GTFS data
+        """
         self.parse_agencies(zip_file.read("agency.txt"))
 
     def parse_agencies(self, agencies):
+        """
+        parse_agencies: read agency.txt
+
+        Arguments:
+        agencies: bytes-like object contianing the contents of `agency.txt`
+        """
         agency_info = [line.split(',') for line in str(agencies, "UTF-8").strip().split('\n')]
         for line in agency_info[1:]:
             self.agencies.append(Agency.from_gtfs(agency_info[0], line))

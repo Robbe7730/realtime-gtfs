@@ -1,2 +1,2 @@
 test:
-	venv/bin/python -m pytest --cov=realtime_gtfs
+	venv/bin/python -m pytest --cov=realtime_gtfs --pylint
