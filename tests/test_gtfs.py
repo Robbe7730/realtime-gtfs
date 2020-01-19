@@ -16,6 +16,7 @@ SQLITE_URL = "sqlite:///:memory:"
 ZIP_FILE = zipfile.ZipFile("./tests/static/sample-feed.zip")
 
 @pytest.mark.xfail
+@pytest.mark.integration
 def test_from_zip_mysql():
     """
     test_from_url_mysql: test if creation of GTFS works with
@@ -26,6 +27,7 @@ def test_from_zip_mysql():
     test_gtfs.from_zip(ZIP_FILE)
     test_gtfs.write_to_db(MYSQL_URL)
 
+@pytest.mark.integration
 def test_from_zip_sqlite():
     """
     test_from_url_sqlite: test if creation of GTFS works with
@@ -36,6 +38,7 @@ def test_from_zip_sqlite():
     test_gtfs.write_to_db(SQLITE_URL)
 
 @pytest.mark.slow
+@pytest.mark.integration
 def test_from_url():
     """
     test_from_url: test if creation of GTFS works from a URL
@@ -43,6 +46,7 @@ def test_from_url():
     test_gtfs = GTFS()
     test_gtfs.from_url(GTFS_URL)
 
+@pytest.mark.integration
 def test_from_zip():
     """
     test_from_zip: test if creation of GTFS works from a zip
@@ -50,6 +54,7 @@ def test_from_zip():
     test_gtfs = GTFS()
     test_gtfs.from_zip(ZIP_FILE)
 
+@pytest.mark.integration
 def test_invalid_url():
     """
     test_invalid_url: test if it fails when given an invalid URL
