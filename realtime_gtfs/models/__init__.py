@@ -6,6 +6,7 @@ from .agency import Agency
 from .fare_attribute import FareAttribute
 from .fare_rule import FareRule
 from .frequency import Frequency
+from .level import Level
 from .pathway import Pathway
 from .route import Route
 from .service import Service
