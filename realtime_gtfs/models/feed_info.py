@@ -18,6 +18,7 @@ class FeedInfo():
         self.feed_version = None
         self.feed_contact_email = None
         self.feed_contact_url = None
+        self.default_lang = None
 
     @staticmethod
     def from_dict(data):
@@ -54,7 +55,7 @@ class FeedInfo():
         """
         Verify that the FeedInfo has at least the required keys
         """
-        # TODO: verify feed_lang, feed_start_date, feed_end_date
+        # TODO: verify feed_lang, feed_start_date, feed_end_date, default_lang
         if self.feed_publisher_name is None:
             raise MissingKeyError("feed_publisher_name")
         if self.feed_publisher_url is None:
@@ -89,6 +90,8 @@ class FeedInfo():
             self.feed_contact_email = value
         elif key == "feed_contact_url":
             self.feed_contact_url = value
+        elif key == "default_lang":
+            self.default_lang = value
         else:
             raise InvalidKeyError(key)
 
@@ -109,5 +112,6 @@ class FeedInfo():
             self.feed_end_date == other.feed_end_date and
             self.feed_version == other.feed_version and
             self.feed_contact_email == other.feed_contact_email and
-            self.feed_contact_url == other.feed_contact_url
+            self.feed_contact_url == other.feed_contact_url and
+            self.default_lang == other.default_lang
         )

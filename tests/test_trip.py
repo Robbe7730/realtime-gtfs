@@ -23,7 +23,8 @@ FULL_TRIP_DICT = {
     "block_id": "123",
     "shape_id": "123",
     "wheelchair_accessible": "1",
-    "bikes_allowed": "2"
+    "bikes_allowed": "2",
+    "exceptional": "1"
 }
 
 MINIMAL_TRIP = Trip.from_dict(MINIMAL_TRIP_DICT)
@@ -93,6 +94,14 @@ def test_invalid_values():
 
     temp_dict = MINIMAL_TRIP_DICT.copy()
     temp_dict["bikes_allowed"] = "3"
+    with pytest.raises(InvalidValueError):
+        Trip.from_gtfs(temp_dict.keys(), temp_dict.values())
+
+    temp_dict = MINIMAL_TRIP_DICT.copy()
+    temp_dict["exceptional"] = "-1"
+    with pytest.raises(InvalidValueError):
+        Trip.from_gtfs(temp_dict.keys(), temp_dict.values())
+    temp_dict["exceptional"] = "2"
     with pytest.raises(InvalidValueError):
         Trip.from_gtfs(temp_dict.keys(), temp_dict.values())
 

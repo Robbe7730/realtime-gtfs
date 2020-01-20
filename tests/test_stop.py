@@ -122,9 +122,20 @@ def test_invalid_values():
     temp_dict["wheelchair_boarding"] = "-1"
     with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
+    temp_dict["wheelchair_boarding"] = "3"
+    with pytest.raises(InvalidValueError):
+        Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
     temp_dict = MINIMAL_STOP_DICT.copy()
-    temp_dict["wheelchair_boarding"] = "3"
+    temp_dict["vehicle_type"] = "-1"
+    with pytest.raises(InvalidValueError):
+        Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
+    temp_dict["vehicle_type"] = "8"
+    with pytest.raises(InvalidValueError):
+        Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
+    temp_dict["vehicle_type"] = "700"
+    Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
+    temp_dict["vehicle_type"] = "1701"
     with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 

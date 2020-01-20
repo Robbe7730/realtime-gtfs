@@ -21,6 +21,11 @@ ENUM_BIKES_ALLOWED = [
     "No bikes allowed"
 ]
 
+ENUM_EXCEPTIONAL = [
+    "Regular Schedule",
+    "Exception"
+]
+
 class Trip():
     """
     Trip: class for trips
@@ -36,6 +41,7 @@ class Trip():
         self.shape_id = None
         self.wheelchair_accessible = 0
         self.bikes_allowed = 0
+        self.exceptional = None
 
     @staticmethod
     def from_dict(data):
@@ -93,6 +99,10 @@ class Trip():
         if self.bikes_allowed < 0 or self.bikes_allowed >= len(ENUM_BIKES_ALLOWED):
             raise InvalidValueError("bikes_allowed")
 
+        if self.exceptional is not None and (self.exceptional < 0 or
+                                             self.exceptional >= len(ENUM_EXCEPTIONAL)):
+            raise InvalidValueError("exceptional")
+
         return True
 
     def setkey(self, key, value):
@@ -126,6 +136,8 @@ class Trip():
             self.wheelchair_accessible = int(value)
         elif key == "bikes_allowed":
             self.bikes_allowed = int(value)
+        elif key == "exceptional":
+            self.exceptional = int(value)
         else:
             raise InvalidKeyError(key)
 
@@ -148,5 +160,6 @@ class Trip():
             self.block_id == other.block_id and
             self.shape_id == other.shape_id and
             self.wheelchair_accessible == other.wheelchair_accessible and
-            self.bikes_allowed == other.bikes_allowed
+            self.bikes_allowed == other.bikes_allowed and
+            self.exceptional == other.exceptional
         )

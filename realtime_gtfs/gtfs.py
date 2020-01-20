@@ -10,9 +10,9 @@ from sqlalchemy import MetaData, Column, String, Table
 
 from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
                                   ServiceException, FareAttribute, FareRule, Shape, Frequency,
-                                  Transfer, Pathway, Level, FeedInfo)
+                                  Transfer, Pathway, Level, FeedInfo, Translation)
 
-from realtime_gtfs.exceptions import InvalidURLError
+from realtime_gtfs.exceptions import InvalidURLError, MissingFileError
 
 class GTFS():
     """
@@ -33,6 +33,7 @@ class GTFS():
         self.transfers = []
         self.pathways = []
         self.levels = []
+        self.translations = []
         self.feed_info = None
         self.connection = None
         self.zip_file = None
@@ -122,6 +123,11 @@ class GTFS():
             self.parse_levels(zip_file.read("levels.txt"))
         if "feed_info.txt" in zip_file.namelist():
             self.parse_feed_info(zip_file.read("feed_info.txt"))
+        if "translations.txt" in zip_file.namelist():
+            self.parse_translations(zip_file.read("translations.txt"))
+
+        if "feed_info.txt" not in zip_file.namelist() and "translations.txt" in zip_file.namelist():
+            raise MissingFileError("feed_info.txt")
 
     def parse_agencies(self, agencies):
         """
@@ -170,9 +176,10 @@ class GTFS():
 
         # ------ v UGLY FIX FOR NMBS DATA v ------
 
-        if trip_info[0][-1] == "trip_type":
-            for line in trip_info[1:]:
-                del line[-1]
+        if "trip_type" in trip_info[0]:
+            index = trip_info[0].index("trip_type")
+            for line in trip_info:
+                del line[index]
 
         # ------ ^ UGLY FIX FOR NMBS DATA ^ ------
 
@@ -319,3 +326,42 @@ class GTFS():
             line.strip().split(',') for line in str(feed_info, "UTF-8").strip().split('\n')
         ]
         self.feed_info = FeedInfo.from_gtfs(feed_info_info[0], feed_info_info[1])
+
+    def parse_translations(self, translation):
+        """
+        parse_translations: read translations.txt
+
+        Arguments:
+        translation: bytes-like object containing the contents of `translations.txt`
+        """
+        translation_info = [
+            line.strip().split(',') for line in str(translation, "UTF-8").strip().split('\n')
+        ]
+
+        # ------ v UGLY FIX FOR NMBS DATA v ------
+
+        # They just use their own standard, because who needs standarization anyway?
+        if "trans_id" in translation_info[0]:
+            for nmbs_line in translation_info[1:]:
+                translation_stops_dict = {
+                    "table_name": "stops", # One for stops
+                    "field_name": "stop_name",
+                    "field_value": nmbs_line[0],
+                    "language": nmbs_line[1],
+                    "translation": nmbs_line[2]
+                }
+                translation_trips_dict = {
+                    "table_name": "trips", # And one for trips
+                    "field_name": "trip_headsign",
+                    "field_value": nmbs_line[0],
+                    "language": nmbs_line[1],
+                    "translation": nmbs_line[2]
+                }
+                self.translations.append(Translation.from_dict(translation_stops_dict))
+                self.translations.append(Translation.from_dict(translation_trips_dict))
+
+
+        # ------ ^ UGLY FIX FOR NMBS DATA ^ ------
+        else:
+            for line in translation_info[1:]:
+                self.translations.append(Translation.from_gtfs(translation_info[0], line))

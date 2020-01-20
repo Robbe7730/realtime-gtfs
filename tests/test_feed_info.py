@@ -21,7 +21,8 @@ FULL_FEED_INFO_DICT = {
     "feed_end_date": "20211111",
     "feed_version": "3.1",
     "feed_contact_email": "info@print.er",
-    "feed_contact_url": "https://print.er/help"
+    "feed_contact_url": "https://print.er/help",
+    "default_lang": "NL"
 }
 
 MINIMAL_FEED_INFO = FeedInfo.from_dict(MINIMAL_FEED_INFO_DICT)

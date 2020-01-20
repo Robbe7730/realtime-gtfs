@@ -6,10 +6,11 @@ import zipfile
 import pytest
 
 from realtime_gtfs import GTFS
-from realtime_gtfs.exceptions import InvalidURLError
+from realtime_gtfs.exceptions import InvalidURLError, MissingFileError
 
 # TODO: read from config file
-GTFS_URL = "https://sncb-opendata.hafas.de/gtfs/static/c21ac6758dd25af84cca5b707f3cb3de"
+NMBS_URL = "https://sncb-opendata.hafas.de/gtfs/static/c21ac6758dd25af84cca5b707f3cb3de"
+GOOGLE_URL = "https://developers.google.com/transit/gtfs/examples/sample-feed.zip"
 MYSQL_URL = "mysql://delaymap:Treinen@localhost:3306/DelayMap"
 SQLITE_URL = "sqlite:///:memory:"
 
@@ -39,12 +40,25 @@ def test_from_zip_sqlite():
 
 @pytest.mark.slow
 @pytest.mark.integration
-def test_from_url():
+def test_from_url_nmbs():
     """
-    test_from_url: test if creation of GTFS works from a URL
+    test_from_url_nmbs: test if creation of GTFS works from the NMBS URL
     """
     test_gtfs = GTFS()
-    test_gtfs.from_url(GTFS_URL)
+    try:
+        test_gtfs.from_url(NMBS_URL)
+    except MissingFileError:
+        # It should still have worked...
+        pass
+
+@pytest.mark.slow
+@pytest.mark.integration
+def test_from_url_google():
+    """
+    test_from_url_google: test if creation of GTFS works from the Google URL
+    """
+    test_gtfs = GTFS()
+    test_gtfs.from_url(GOOGLE_URL)
 
 @pytest.mark.integration
 def test_from_zip():
@@ -55,6 +69,7 @@ def test_from_zip():
     test_gtfs.from_zip(ZIP_FILE)
 
 @pytest.mark.integration
+@pytest.mark.slow
 def test_invalid_url():
     """
     test_invalid_url: test if it fails when given an invalid URL

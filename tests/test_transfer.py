@@ -17,7 +17,11 @@ FULL_TRANSFER_DICT = {
     "from_stop_id": "124",
     "to_stop_id": "124",
     "transfer_type": "1",
-    "min_transfer_time": "12"
+    "min_transfer_time": "12",
+    "from_route_id": "abc",
+    "to_route_id": "abc",
+    "from_trip_id": "abc",
+    "to_trip_id": "abc"
 }
 
 MINIMAL_TRANSFER = Transfer.from_dict(MINIMAL_TRANSFER_DICT)

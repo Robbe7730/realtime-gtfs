@@ -33,3 +33,11 @@ class InvalidURLError(RuntimeError):
     def __init__(self, arg):
         self.args = ["Invalid URL: " + arg]
         RuntimeError.__init__(self)
+
+class MissingFileError(RuntimeError):
+    """
+    MissingFileError: raised when a required file is not present
+    """
+    def __init__(self, arg):
+        self.args = ["Missing file " + arg]
+        RuntimeError.__init__(self)

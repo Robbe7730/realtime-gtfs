@@ -6,6 +6,7 @@ import pytz
 
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
+from .enum_route_type import ENUM_ROUTE_TYPE as ENUM_VEHICLE_TYPE
 
 ENUM_LOCATION_TYPE = [
     "Stop/Platform",
@@ -39,6 +40,7 @@ class Stop():
         self.wheelchair_boarding = 0
         self.level_id = None
         self.platform_code = None
+        self.vehicle_type = None
 
     @staticmethod
     def from_dict(data):
@@ -101,6 +103,8 @@ class Stop():
         if (self.wheelchair_boarding < 0 or
                 self.wheelchair_boarding >= len(ENUM_WHEELCHAIR_BOARDING)):
             raise InvalidValueError("wheelchair_boarding")
+        if self.vehicle_type is not None and self.vehicle_type not in ENUM_VEHICLE_TYPE:
+            raise InvalidValueError("vehicle_type")
 
         return True
 
@@ -142,6 +146,8 @@ class Stop():
             self.level_id = value
         elif key == "platform_code":
             self.platform_code = value
+        elif key == "vehicle_type":
+            self.vehicle_type = int(value)
         else:
             raise InvalidKeyError(key)
 
@@ -168,5 +174,6 @@ class Stop():
             self.stop_timezone == other.stop_timezone and
             self.wheelchair_boarding == other.wheelchair_boarding and
             self.level_id == other.level_id and
-            self.platform_code == other.platform_code
+            self.platform_code == other.platform_code and
+            self.vehicle_type == other.vehicle_type
         )
