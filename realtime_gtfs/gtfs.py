@@ -10,7 +10,7 @@ from sqlalchemy import MetaData, Column, String, Table
 
 from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
                                   ServiceException, FareAttribute, FareRule, Shape, Frequency,
-                                  Transfer, Pathway, Level)
+                                  Transfer, Pathway, Level, FeedInfo)
 
 from realtime_gtfs.exceptions import InvalidURLError
 
@@ -33,6 +33,7 @@ class GTFS():
         self.transfers = []
         self.pathways = []
         self.levels = []
+        self.feed_info = None
         self.connection = None
         self.zip_file = None
         self.zip_file_url = ""
@@ -119,6 +120,8 @@ class GTFS():
             self.parse_pathways(zip_file.read("pathways.txt"))
         if "levels.txt" in zip_file.namelist():
             self.parse_levels(zip_file.read("levels.txt"))
+        if "feed_info.txt" in zip_file.namelist():
+            self.parse_feed_info(zip_file.read("feed_info.txt"))
 
     def parse_agencies(self, agencies):
         """
@@ -304,3 +307,15 @@ class GTFS():
         ]
         for line in level_info[1:]:
             self.levels.append(Level.from_gtfs(level_info[0], line))
+
+    def parse_feed_info(self, feed_info):
+        """
+        parse_feed_info: read feed_info.txt
+
+        Arguments:
+        feed_info: bytes-like object containing the contents of `feed_info.txt`
+        """
+        feed_info_info = [
+            line.strip().split(',') for line in str(feed_info, "UTF-8").strip().split('\n')
+        ]
+        self.feed_info = FeedInfo.from_gtfs(feed_info_info[0], feed_info_info[1])
