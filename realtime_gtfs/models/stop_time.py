@@ -46,7 +46,7 @@ class StopTime():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'stop_times', meta,
             sa.Column('trip_id', sa.String(length=255), sa.ForeignKey("trips.trip_id"),
                       nullable=False),

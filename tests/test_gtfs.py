@@ -6,7 +6,7 @@ import zipfile
 import pytest
 
 from realtime_gtfs import GTFS
-from realtime_gtfs.exceptions import InvalidURLError, MissingFileError
+from realtime_gtfs.exceptions import InvalidURLError
 
 # TODO: read from config file
 NMBS_URL = "https://sncb-opendata.hafas.de/gtfs/static/c21ac6758dd25af84cca5b707f3cb3de"
@@ -26,7 +26,7 @@ def test_from_zip_mysql():
     """
     test_gtfs = GTFS()
     test_gtfs.from_zip(ZIP_FILE)
-    test_gtfs.write_to_db(MYSQL_URL)
+    test_gtfs.write_to_db(MYSQL_URL, hard_reset=True)
 
 @pytest.mark.integration
 def test_from_zip_sqlite():
@@ -45,11 +45,7 @@ def test_from_url_nmbs():
     test_from_url_nmbs: test if creation of GTFS works from the NMBS URL
     """
     test_gtfs = GTFS()
-    try:
-        test_gtfs.from_url(NMBS_URL)
-    except MissingFileError:
-        # It should still have worked...
-        pass
+    test_gtfs.from_url(NMBS_URL)
 
 @pytest.mark.slow
 @pytest.mark.integration

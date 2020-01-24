@@ -50,7 +50,7 @@ class Trip():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'trips', meta,
             sa.Column('trip_id', sa.String(length=255), primary_key=True),
             sa.Column('route_id', sa.String(length=255), sa.ForeignKey("routes.route_id"),

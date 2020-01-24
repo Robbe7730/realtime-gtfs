@@ -2,7 +2,6 @@
 test_stop.py: tests for realtime_gtfs/stop.py
 """
 
-import pytz
 import pytest
 
 from realtime_gtfs.models import Stop
@@ -51,11 +50,11 @@ def test_stop_happyflow_full():
 
 def test_invalid_timezone():
     """
-    test_invalid_timezone: check if it raises UnknownTimeZoneError when given an invalid timezone
+    test_invalid_timezone: check if it raises InvalidValueError when given an invalid timezone
     """
     temp_dict = MINIMAL_STOP_DICT.copy()
     temp_dict["stop_timezone"] = "MiddleEarth/Shire"
-    with pytest.raises(pytz.exceptions.UnknownTimeZoneError):
+    with pytest.raises(InvalidValueError):
         Stop.from_gtfs(temp_dict.keys(), temp_dict.values())
 
 def test_missing_key():

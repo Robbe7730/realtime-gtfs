@@ -49,7 +49,7 @@ class Stop():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'stops', meta,
             sa.Column('stop_id', sa.String(length=255), primary_key=True),
             sa.Column('stop_code', sa.String(length=255)),
@@ -132,6 +132,12 @@ class Stop():
         if self.vehicle_type is not None and self.vehicle_type not in ENUM_VEHICLE_TYPE:
             raise InvalidValueError("vehicle_type")
 
+        if self.stop_timezone:
+            try:
+                pytz.timezone(self.stop_timezone)
+            except pytz.exceptions.UnknownTimeZoneError:
+                raise InvalidValueError("stop_timezone")
+
         return True
 
     def setkey(self, key, value):
@@ -165,7 +171,7 @@ class Stop():
         elif key == "parent_station":
             self.parent_station = value
         elif key == "stop_timezone":
-            self.stop_timezone = pytz.timezone(value)
+            self.stop_timezone = value
         elif key == "wheelchair_boarding":
             self.wheelchair_boarding = int(value)
         elif key == "level_id":

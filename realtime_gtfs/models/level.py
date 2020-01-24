@@ -20,7 +20,7 @@ class Level():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'levels', meta,
             sa.Column('level_id', sa.String(length=255), primary_key=True),
             sa.Column('level_index', sa.Float(), nullable=False),

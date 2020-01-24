@@ -29,7 +29,7 @@ class FareAttribute():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'fare_attributes', meta,
             sa.Column('fare_id', sa.String(length=255), primary_key=True),
             sa.Column('price', sa.Float(), nullable=False),
@@ -39,6 +39,22 @@ class FareAttribute():
             sa.Column('agency_id', sa.String(length=255), sa.ForeignKey("agencies.agency_id")),
             sa.Column('transfer_duration', sa.String(length=255))
         )
+
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+
+        ret["fare_id"] = self.fare_id
+        ret["price"] = self.price
+        ret["currency_type"] = self.currency_type
+        ret["payment_method"] = self.payment_method
+        ret["transfers"] = self.transfers
+        ret["agency_id"] = self.agency_id
+        ret["transfer_duration"] = self.transfer_duration
+
+        return ret
 
     @staticmethod
     def from_dict(data):

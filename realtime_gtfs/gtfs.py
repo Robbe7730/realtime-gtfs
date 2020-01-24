@@ -6,13 +6,13 @@ import tempfile
 import zipfile
 import requests
 
-import realtime_gtfs.database as db
+from realtime_gtfs.database import DatabaseConnection
 
 from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
                                   ServiceException, FareAttribute, FareRule, Shape, Frequency,
                                   Transfer, Pathway, Level, FeedInfo, Translation)
 
-from realtime_gtfs.exceptions import InvalidURLError, MissingFileError
+from realtime_gtfs.exceptions import InvalidURLError
 
 class GTFS():
     """
@@ -39,14 +39,17 @@ class GTFS():
         self.zip_file = None
         self.zip_file_url = ""
 
-    def write_to_db(self, url):
+    def write_to_db(self, url, hard_reset=False):
         """
         write_to_db: write GTFS data to database
 
         Arguments:
         url: URL for database connection
         """
-        db.write_to_db(self, url)
+        db_con = DatabaseConnection(url)
+        if hard_reset:
+            db_con.reset()
+        db_con.write_gtfs(self)
 
     # GTFS reading
     def get_zip(self, url):
@@ -116,9 +119,6 @@ class GTFS():
             self.parse_feed_info(zip_file.read("feed_info.txt"))
         if "translations.txt" in zip_file.namelist():
             self.parse_translations(zip_file.read("translations.txt"))
-
-        if "feed_info.txt" not in zip_file.namelist() and "translations.txt" in zip_file.namelist():
-            raise MissingFileError("feed_info.txt")
 
     def parse_agencies(self, agencies):
         """

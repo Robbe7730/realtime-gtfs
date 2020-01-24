@@ -29,7 +29,7 @@ class Route():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'routes', meta,
             sa.Column('route_id', sa.String(length=255), primary_key=True),
             sa.Column('agency_id', sa.String(length=255), sa.ForeignKey("agencies.agency_id")),

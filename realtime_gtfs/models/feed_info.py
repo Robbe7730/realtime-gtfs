@@ -27,7 +27,7 @@ class FeedInfo():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'feed_info', meta,
             sa.Column('feed_publisher_name', sa.String(length=255), nullable=False),
             sa.Column('feed_publisher_url', sa.String(length=255), nullable=False),

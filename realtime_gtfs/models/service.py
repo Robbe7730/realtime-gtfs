@@ -32,7 +32,7 @@ class Service():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'services', meta,
             sa.Column('service_id', sa.String(length=255), primary_key=True),
             sa.Column('monday', sa.Integer()),

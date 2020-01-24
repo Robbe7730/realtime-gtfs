@@ -2,11 +2,10 @@
 test_agency: tests for realtime_gtfs/agency.py
 """
 
-import pytz
 import pytest
 
 from realtime_gtfs.models import Agency
-from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError
+from realtime_gtfs.exceptions import MissingKeyError, InvalidKeyError, InvalidValueError
 
 MINIMAL_AGENCY_DICT = {
     "agency_id": "Minimal",
@@ -45,11 +44,11 @@ def test_agency_happyflow_full():
 
 def test_invalid_timezone():
     """
-    test_invalid_timezone: check if it raises UnknownTimeZoneError when given an invalid timezone
+    test_invalid_timezone: check if it raises InvalidValueError when given an invalid timezone
     """
     temp_dict = MINIMAL_AGENCY_DICT.copy()
     temp_dict["agency_timezone"] = "MiddleEarth/Shire"
-    with pytest.raises(pytz.exceptions.UnknownTimeZoneError):
+    with pytest.raises(InvalidValueError):
         Agency.from_gtfs(temp_dict.keys(), temp_dict.values())
 
 def test_missing_key():

@@ -6,7 +6,7 @@ import pytz
 
 import sqlalchemy as sa
 
-from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError
+from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 class Agency():
     """
@@ -27,7 +27,7 @@ class Agency():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'agencies', meta,
             sa.Column('agency_id', sa.String(length=255), primary_key=True),
             sa.Column('agency_name', sa.String(length=255), nullable=False),
@@ -38,6 +38,21 @@ class Agency():
             sa.Column('agency_fare_url', sa.String(length=255)),
             sa.Column('agency_email', sa.String(length=255))
         )
+
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["agency_id"] = self.agency_id
+        ret["agency_name"] = self.agency_name
+        ret["agency_url"] = self.agency_url
+        ret["agency_timezone"] = self.agency_timezone
+        ret["agency_lang"] = self.agency_lang
+        ret["agency_phone"] = self.agency_phone
+        ret["agency_fare_url"] = self.agency_fare_url
+        ret["agency_email"] = self.agency_email
+        return ret
 
     @staticmethod
     def from_dict(data):
@@ -81,6 +96,10 @@ class Agency():
             raise MissingKeyError("agency_url")
         if self.agency_timezone is None:
             raise MissingKeyError("agency_timezone")
+        try:
+            pytz.timezone(self.agency_timezone)
+        except pytz.exceptions.UnknownTimeZoneError:
+            raise InvalidValueError("agency_timezone")
         return True
 
     def setkey(self, key, value):
@@ -100,7 +119,7 @@ class Agency():
         elif key == "agency_url":
             self.agency_url = value
         elif key == "agency_timezone":
-            self.agency_timezone = pytz.timezone(value)
+            self.agency_timezone = value
         elif key == "agency_lang":
             self.agency_lang = value
         elif key == "agency_phone":

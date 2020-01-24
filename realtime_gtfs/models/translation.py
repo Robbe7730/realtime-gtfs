@@ -33,7 +33,7 @@ class Translation():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'translations', meta,
             sa.Column('table_name', sa.Integer(), nullable=False),
             sa.Column('field_name', sa.String(length=255), nullable=False),

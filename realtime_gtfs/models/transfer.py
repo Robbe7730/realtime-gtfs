@@ -32,7 +32,7 @@ class Transfer():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'tranfers', meta,
             sa.Column('from_stop_id', sa.String(length=255), sa.ForeignKey("stops.stop_id"),
                       nullable=False),

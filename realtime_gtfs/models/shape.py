@@ -22,7 +22,7 @@ class Shape():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'shapes', meta,
             sa.Column('shape_id', sa.String(length=255), primary_key=True),
             sa.Column('shape_pt_lat', sa.Float()),

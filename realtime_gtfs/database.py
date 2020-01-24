@@ -8,39 +8,65 @@ from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
                                   ServiceException, FareAttribute, FareRule, Shape, Frequency,
                                   Transfer, Pathway, Level, FeedInfo, Translation)
 
-def write_to_db(_gtfs, url):
+
+class DatabaseConnection:
     """
-    write_to_db: write GTFS data to database
-
-    Arguments:
-    url: URL for database connection
+    DatabaseConnection: Handles database interactions
     """
-    connection = sqlalchemy.create_engine(url, echo=True)
-    create_tables(connection)
+    def __init__(self, url):
+        self.engine = sqlalchemy.create_engine(url)
+        self.connection = self.engine.connect()
+        self.meta = sqlalchemy.MetaData()
+        self.meta.bind = self.engine
+        self.tables = {}
 
-def create_tables(connection):
-    """
-    create_tables: create all tables required for GTFS
+        self.tables["agencies"] = Agency.create_table(self.meta)
+        self.tables["fare_attributes"] = FareAttribute.create_table(self.meta)
+        self.tables["routes"] = Route.create_table(self.meta)
+        self.tables["stops"] = Stop.create_table(self.meta)
+        self.tables["fare_rules"] = FareRule.create_table(self.meta)
+        self.tables["feed_infos"] = FeedInfo.create_table(self.meta)
+        self.tables["frequencies"] = Frequency.create_table(self.meta)
+        self.tables["levels"] = Level.create_table(self.meta)
+        self.tables["pathways"] = Pathway.create_table(self.meta)
+        self.tables["services"] = Service.create_table(self.meta)
+        self.tables["service_exceptions"] = ServiceException.create_table(self.meta)
+        self.tables["shapes"] = Shape.create_table(self.meta)
+        self.tables["stop_times"] = StopTime.create_table(self.meta)
+        self.tables["transfers"] = Transfer.create_table(self.meta)
+        self.tables["translations"] = Translation.create_table(self.meta)
+        self.tables["trips"] = Trip.create_table(self.meta)
 
-    Expects self.connection to be set up beforehand!
-    """
-    meta = sqlalchemy.MetaData()
 
-    Agency.create_table(meta)
-    FareAttribute.create_table(meta)
-    Route.create_table(meta)
-    Stop.create_table(meta)
-    FareRule.create_table(meta)
-    FeedInfo.create_table(meta)
-    Frequency.create_table(meta)
-    Level.create_table(meta)
-    Pathway.create_table(meta)
-    Service.create_table(meta)
-    ServiceException.create_table(meta)
-    Shape.create_table(meta)
-    StopTime.create_table(meta)
-    Transfer.create_table(meta)
-    Translation.create_table(meta)
-    Trip.create_table(meta)
+    def reset(self):
+        """
+        reset: resets the ENTIRE database, dropping and recreating all tables
+        """
+        self.meta.drop_all()
+        self.meta.create_all()
 
-    meta.create_all(connection)
+    def write_gtfs(self, gtfs):
+        """
+        write_gtfs: Write all data of a GTFS instance to the database
+        """
+        self.meta.create_all()
+        self.write_agencies(gtfs.agencies)
+        self.write_fare_attributes(gtfs.fare_attributes)
+
+    def write_agencies(self, agencies):
+        """
+        write_agencies: writes all instances of Agency
+        """
+        for agency in agencies:
+            ins = sqlalchemy.sql.expression.insert(self.tables["agencies"],
+                                                   values=agency.to_dict())
+            self.connection.execute(ins)
+
+    def write_fare_attributes(self, fare_attributes):
+        """
+        write_fare_attributes: writes all instances of FareAttribute
+        """
+        for agency in fare_attributes:
+            ins = sqlalchemy.sql.expression.insert(self.tables["fare_attributes"],
+                                                   values=agency.to_dict())
+            self.connection.execute(ins)

@@ -27,7 +27,7 @@ class Frequency():
         """
         Create the SQLAlchemy table
         """
-        sa.Table(
+        return sa.Table(
             'frequencies', meta,
             sa.Column('trip_id', sa.String(length=255), sa.ForeignKey("trips.trip_id")),
             sa.Column('start_time', sa.String(length=255)),
