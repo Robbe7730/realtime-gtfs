@@ -2,6 +2,8 @@
 stop_time.py: contains data relevant to stop_times.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 ENUM_PICKUP_TYPE = [
@@ -38,6 +40,27 @@ class StopTime():
         self.drop_off_type = 0
         self.shape_dist_traveled = None
         self.timepoint = 1
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'stop_times', meta,
+            sa.Column('trip_id', sa.String(length=255), sa.ForeignKey("trips.trip_id"),
+                      nullable=False),
+            sa.Column('arrival_time', sa.String(length=255)),
+            sa.Column('departure_time', sa.String(length=255)),
+            sa.Column('stop_id', sa.String(length=255), sa.ForeignKey("stops.stop_id"),
+                      nullable=False),
+            sa.Column('stop_sequence', sa.Integer()),
+            sa.Column('stop_headsign', sa.String(length=255)),
+            sa.Column('pickup_type', sa.Integer()),
+            sa.Column('drop_off_type', sa.Integer()),
+            sa.Column('shape_dist_traveled', sa.Float()),
+            sa.Column('timepoint', sa.Integer()),
+        )
 
     @staticmethod
     def from_dict(data):

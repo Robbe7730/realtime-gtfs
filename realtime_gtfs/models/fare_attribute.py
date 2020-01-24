@@ -2,6 +2,8 @@
 fare_attribute.py: contains data relevant to fare_attributes.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 ENUM_PAYMENT_METHOD = [
@@ -21,6 +23,22 @@ class FareAttribute():
         self.transfers = None
         self.agency_id = None
         self.transfer_duration = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'fare_attributes', meta,
+            sa.Column('fare_id', sa.String(length=255), primary_key=True),
+            sa.Column('price', sa.Float(), nullable=False),
+            sa.Column('currency_type', sa.String(length=3), nullable=False),
+            sa.Column('payment_method', sa.Integer(), nullable=False),
+            sa.Column('transfers', sa.Integer(), nullable=False),
+            sa.Column('agency_id', sa.String(length=255), sa.ForeignKey("agencies.agency_id")),
+            sa.Column('transfer_duration', sa.String(length=255))
+        )
 
     @staticmethod
     def from_dict(data):

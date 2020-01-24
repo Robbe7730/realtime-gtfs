@@ -20,6 +20,13 @@ class ServiceException():
         self.exception_type = None
 
     @staticmethod
+    def create_table(_meta):
+        """
+        ServiceException is merged with Service for the table services, nothing to be done here...
+        """
+        return
+
+    @staticmethod
     def from_dict(data):
         """
         Creates an ServiceException from a dict. Checks correctness after

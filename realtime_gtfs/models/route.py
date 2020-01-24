@@ -2,6 +2,8 @@
 route.py: contains data relevant to routes.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 from .enum_route_type import ENUM_ROUTE_TYPE
@@ -21,6 +23,26 @@ class Route():
         self.route_color = "FFFFFF"
         self.route_text_color = "000000"
         self.route_sort_order = 0
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'routes', meta,
+            sa.Column('route_id', sa.String(length=255), primary_key=True),
+            sa.Column('agency_id', sa.String(length=255), sa.ForeignKey("agencies.agency_id")),
+            sa.Column('route_short_name', sa.String(length=255)),
+            sa.Column('route_long_name', sa.String(length=255)),
+            sa.Column('route_desc', sa.String(length=255)),
+            sa.Column('route_type', sa.Integer(), nullable=False),
+            sa.Column('route_url', sa.String(length=255)),
+            sa.Column('route_color', sa.String(length=255)),
+            sa.Column('route_text_color', sa.String(length=255)),
+            sa.Column('route_sort_order', sa.Integer()),
+        )
+
 
     @staticmethod
     def from_dict(data):

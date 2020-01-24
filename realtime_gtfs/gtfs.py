@@ -6,7 +6,7 @@ import tempfile
 import zipfile
 import requests
 import sqlalchemy
-from sqlalchemy import MetaData, Column, String, Table
+from sqlalchemy import MetaData
 
 from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
                                   ServiceException, FareAttribute, FareRule, Shape, Frequency,
@@ -46,15 +46,34 @@ class GTFS():
         Arguments:
         url: URL for database connection
         """
-        self.connection = sqlalchemy.create_engine(url)
+        self.connection = sqlalchemy.create_engine(url, echo=True)
+        self.create_tables()
+
+    def create_tables(self):
+        """
+        create_tables: create all tables required for GTFS
+
+        Expects self.connection to be set up beforehand!
+        """
         meta = MetaData()
-        Table(
-            'agencies', meta,
-            Column('agency_id', String(length=255), primary_key=True),
-            Column('agency_name', String(length=255)),
-            Column('agency_url', String(length=255)),
-            Column('agency_timezone', String(length=255)),
-        )
+
+        Agency.create_table(meta)
+        FareAttribute.create_table(meta)
+        Route.create_table(meta)
+        Stop.create_table(meta)
+        FareRule.create_table(meta)
+        FeedInfo.create_table(meta)
+        Frequency.create_table(meta)
+        Level.create_table(meta)
+        Pathway.create_table(meta)
+        Service.create_table(meta)
+        ServiceException.create_table(meta)
+        Shape.create_table(meta)
+        StopTime.create_table(meta)
+        Transfer.create_table(meta)
+        Translation.create_table(meta)
+        Trip.create_table(meta)
+
         meta.create_all(self.connection)
 
     # GTFS reading

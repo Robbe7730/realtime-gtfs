@@ -2,6 +2,8 @@
 translation.py: contains data relevant to translations.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 ENUM_TABLE_NAME = [
@@ -25,6 +27,22 @@ class Translation():
         self.record_id = None
         self.record_sub_id = None
         self.field_value = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'translations', meta,
+            sa.Column('table_name', sa.Integer(), nullable=False),
+            sa.Column('field_name', sa.String(length=255), nullable=False),
+            sa.Column('language', sa.String(length=255), nullable=False),
+            sa.Column('translation', sa.String(length=255), nullable=False),
+            sa.Column('record_id', sa.String(length=255)),
+            sa.Column('record_sub_id', sa.Integer()),
+            sa.Column('field_value', sa.String(length=255))
+        )
 
     @staticmethod
     def from_dict(data):

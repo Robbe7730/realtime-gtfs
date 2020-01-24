@@ -2,6 +2,8 @@
 shape.py: contains data relevant to shapes.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 class Shape():
@@ -14,6 +16,20 @@ class Shape():
         self.shape_pt_lon = None
         self.shape_pt_sequence = None
         self.shape_dist_traveled = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'shapes', meta,
+            sa.Column('shape_id', sa.String(length=255), primary_key=True),
+            sa.Column('shape_pt_lat', sa.Float()),
+            sa.Column('shape_pt_lon', sa.Float()),
+            sa.Column('shape_pt_sequence', sa.Integer()),
+            sa.Column('shape_dist_traveled', sa.Float()),
+        )
 
     @staticmethod
     def from_dict(data):

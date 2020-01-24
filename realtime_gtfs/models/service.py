@@ -2,6 +2,8 @@
 service.py: contains data relevant to calendar.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 ENUM_AVAILABLE = [
@@ -24,6 +26,26 @@ class Service():
         self.sunday = None
         self.start_date = None
         self.end_date = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'services', meta,
+            sa.Column('service_id', sa.String(length=255), primary_key=True),
+            sa.Column('monday', sa.Integer()),
+            sa.Column('tuesday', sa.Integer()),
+            sa.Column('wednesday', sa.Integer()),
+            sa.Column('thursday', sa.Integer()),
+            sa.Column('friday', sa.Integer()),
+            sa.Column('saturday', sa.Integer()),
+            sa.Column('sunday', sa.Integer()),
+            sa.Column('start_date', sa.String(length=255)),
+            sa.Column('end_date', sa.String(length=255)),
+            sa.Column('exception_type', sa.String(length=255))
+        )
 
     @staticmethod
     def from_dict(data):

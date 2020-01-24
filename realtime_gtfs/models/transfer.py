@@ -2,6 +2,8 @@
 transfer.py: contains data relevant to transfers.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 ENUM_TRANSFER_TYPE = [
@@ -24,6 +26,25 @@ class Transfer():
         self.to_route_id = None
         self.from_trip_id = None
         self.to_trip_id = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'tranfers', meta,
+            sa.Column('from_stop_id', sa.String(length=255), sa.ForeignKey("stops.stop_id"),
+                      nullable=False),
+            sa.Column('to_stop_id', sa.String(length=255), sa.ForeignKey("stops.stop_id"),
+                      nullable=False),
+            sa.Column('transfer_type', sa.Integer()),
+            sa.Column('min_transfer_time', sa.Integer()),
+            sa.Column('from_route_id', sa.String(length=255), sa.ForeignKey("routes.route_id")),
+            sa.Column('to_route_id', sa.String(length=255), sa.ForeignKey("routes.route_id")),
+            sa.Column('from_trip_id', sa.String(length=255), sa.ForeignKey("routes.route_id")),
+            sa.Column('to_trip_id', sa.String(length=255), sa.ForeignKey("routes.route_id")),
+        )
 
     @staticmethod
     def from_dict(data):

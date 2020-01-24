@@ -4,15 +4,16 @@ agency.py: contains data relevant to agency.txt
 
 import pytz
 
-from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError
+import sqlalchemy as sa
 
+from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError
 
 class Agency():
     """
     Agency: class for agencies
     """
     def __init__(self):
-        self.agency_id = None
+        self.agency_id = "NO NAME"
         self.agency_name = None
         self.agency_url = None
         self.agency_timezone = None
@@ -20,6 +21,23 @@ class Agency():
         self.agency_phone = None
         self.agency_fare_url = None
         self.agency_email = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'agencies', meta,
+            sa.Column('agency_id', sa.String(length=255), primary_key=True),
+            sa.Column('agency_name', sa.String(length=255), nullable=False),
+            sa.Column('agency_url', sa.String(length=255), nullable=False),
+            sa.Column('agency_timezone', sa.String(length=255), nullable=False),
+            sa.Column('agency_lang', sa.String(length=255)),
+            sa.Column('agency_phone', sa.String(length=255)),
+            sa.Column('agency_fare_url', sa.String(length=255)),
+            sa.Column('agency_email', sa.String(length=255))
+        )
 
     @staticmethod
     def from_dict(data):

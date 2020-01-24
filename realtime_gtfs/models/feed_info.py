@@ -2,6 +2,8 @@
 feed_info.py: contains data relevant to feed_info.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError
 
 
@@ -19,6 +21,24 @@ class FeedInfo():
         self.feed_contact_email = None
         self.feed_contact_url = None
         self.default_lang = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'feed_info', meta,
+            sa.Column('feed_publisher_name', sa.String(length=255), nullable=False),
+            sa.Column('feed_publisher_url', sa.String(length=255), nullable=False),
+            sa.Column('feed_lang', sa.String(length=255), nullable=False),
+            sa.Column('feed_start_date', sa.String(length=255)),
+            sa.Column('feed_end_date', sa.String(length=255)),
+            sa.Column('feed_version', sa.String(length=255)),
+            sa.Column('feed_contact_email', sa.String(length=255)),
+            sa.Column('feed_contact_url', sa.String(length=255)),
+            sa.Column('default_lang', sa.String(length=255)),
+        )
 
     @staticmethod
     def from_dict(data):

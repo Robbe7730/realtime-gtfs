@@ -2,6 +2,8 @@
 pathway.py: contains data relevant to pathways.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 ENUM_PATHWAY_MODE = [
@@ -36,6 +38,30 @@ class Pathway():
         self.min_width = None
         self.signposted_as = None
         self.reversed_signposted_as = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'pathways', meta,
+            sa.Column('pathway_id', sa.String(length=255), primary_key=True),
+            sa.Column('from_stop_id', sa.String(length=255), sa.ForeignKey("stops.stop_id"),
+                      nullable=False),
+            sa.Column('to_stop_id', sa.String(length=255), sa.ForeignKey("stops.stop_id"),
+                      nullable=False),
+            sa.Column('pathway_mode', sa.Integer(), nullable=False),
+            sa.Column('is_bidirectional', sa.Integer(), nullable=False),
+            sa.Column('length', sa.Float()),
+            sa.Column('traversal_time', sa.Integer()),
+            sa.Column('stair_count', sa.Integer()),
+            sa.Column('max_slope', sa.Float()),
+            sa.Column('min_width', sa.Float()),
+            sa.Column('signposted_as', sa.String(length=255), sa.ForeignKey("stops.stop_id")),
+            sa.Column('reversed_signposted_as', sa.String(length=255),
+                      sa.ForeignKey("stops.stop_id")),
+        )
 
     @staticmethod
     def from_dict(data):

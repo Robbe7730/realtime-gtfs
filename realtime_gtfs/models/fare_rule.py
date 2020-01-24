@@ -2,6 +2,9 @@
 fare_rule.py: contains data relevant to fare_rules.txt
 """
 
+import sqlalchemy as sa
+
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError
 
 class FareRule():
@@ -14,6 +17,20 @@ class FareRule():
         self.origin_id = None
         self.destination_id = None
         self.contains_id = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'farerules', meta,
+            sa.Column('fare_id', sa.String(length=255), primary_key=True),
+            sa.Column('route_id', sa.String(length=255), sa.ForeignKey("routes.route_id"), ),
+            sa.Column('origin_id', sa.String(length=255)),
+            sa.Column('destination_id', sa.String(length=255)),
+            sa.Column('contains_id', sa.String(length=255)),
+        )
 
     @staticmethod
     def from_dict(data):

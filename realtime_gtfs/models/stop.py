@@ -2,6 +2,8 @@
 stop.py: contains data relevant to stops.txt
 """
 
+import sqlalchemy as sa
+
 import pytz
 
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
@@ -41,6 +43,30 @@ class Stop():
         self.level_id = None
         self.platform_code = None
         self.vehicle_type = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'stops', meta,
+            sa.Column('stop_id', sa.String(length=255), primary_key=True),
+            sa.Column('stop_code', sa.String(length=255)),
+            sa.Column('stop_name', sa.String(length=255)),
+            sa.Column('stop_desc', sa.String(length=255)),
+            sa.Column('stop_lat', sa.Float()),
+            sa.Column('stop_lon', sa.Float()),
+            sa.Column('zone_id', sa.String(length=255), unique=True),
+            sa.Column('stop_url', sa.String(length=255)),
+            sa.Column('location_type', sa.Integer()),
+            sa.Column('parent_station', sa.String(length=255), sa.ForeignKey("stops.stop_id")),
+            sa.Column('stop_timezone', sa.String(length=255)),
+            sa.Column('wheelchair_boarding', sa.Integer()),
+            sa.Column('level_id', sa.String(length=255), sa.ForeignKey("levels.level_id")),
+            sa.Column('platform_code', sa.String(length=255)),
+            sa.Column('vehicle_type', sa.Integer())
+        )
 
     @staticmethod
     def from_dict(data):

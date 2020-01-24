@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+
+"""
+create_database: set up database for use with realtime_gtfs
+"""
+
+from realtime_gtfs import GTFS
+
+GTFS().write_to_db("sqlite:///database.db")

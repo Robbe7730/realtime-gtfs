@@ -2,6 +2,8 @@
 freqency.py: contains data relevant to freqencies.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 ENUM_EXACT_TIMES = [
@@ -19,6 +21,20 @@ class Frequency():
         self.end_time = None
         self.headway_secs = None
         self.exact_times = 0
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'frequencies', meta,
+            sa.Column('trip_id', sa.String(length=255), sa.ForeignKey("trips.trip_id")),
+            sa.Column('start_time', sa.String(length=255)),
+            sa.Column('end_time', sa.String(length=255)),
+            sa.Column('headway_secs', sa.Integer()),
+            sa.Column('exact_times', sa.Integer())
+        )
 
     @staticmethod
     def from_dict(data):

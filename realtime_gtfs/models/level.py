@@ -2,6 +2,8 @@
 level.py: contains data relevant to levels.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError
 
 class Level():
@@ -12,6 +14,18 @@ class Level():
         self.level_id = None
         self.level_index = None
         self.level_name = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'levels', meta,
+            sa.Column('level_id', sa.String(length=255), primary_key=True),
+            sa.Column('level_index', sa.Float(), nullable=False),
+            sa.Column('level_name', sa.String(length=255))
+        )
 
     @staticmethod
     def from_dict(data):

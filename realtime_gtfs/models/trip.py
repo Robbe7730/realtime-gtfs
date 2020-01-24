@@ -2,6 +2,8 @@
 trip.py: contains data relevant to trips.txt
 """
 
+import sqlalchemy as sa
+
 from realtime_gtfs.exceptions import InvalidKeyError, MissingKeyError, InvalidValueError
 
 ENUM_DIRECTION_ID = [
@@ -42,6 +44,28 @@ class Trip():
         self.wheelchair_accessible = 0
         self.bikes_allowed = 0
         self.exceptional = None
+
+    @staticmethod
+    def create_table(meta):
+        """
+        Create the SQLAlchemy table
+        """
+        sa.Table(
+            'trips', meta,
+            sa.Column('trip_id', sa.String(length=255), primary_key=True),
+            sa.Column('route_id', sa.String(length=255), sa.ForeignKey("routes.route_id"),
+                      nullable=False),
+            sa.Column('service_id', sa.String(length=255), sa.ForeignKey("services.service_id"),
+                      nullable=False),
+            sa.Column('trip_headsign', sa.String(length=255)),
+            sa.Column('trip_short_name', sa.String(length=255)),
+            sa.Column('direction_id', sa.Integer()),
+            sa.Column('block_id', sa.String(length=255), unique=True),
+            sa.Column('shape_id', sa.String(length=255), sa.ForeignKey("shapes.shape_id")),
+            sa.Column('wheelchair_accessible', sa.Integer()),
+            sa.Column('bikes_allowed', sa.Integer()),
+            sa.Column('exceptional', sa.Integer())
+        )
 
     @staticmethod
     def from_dict(data):
