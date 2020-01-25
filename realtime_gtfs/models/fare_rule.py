@@ -24,13 +24,25 @@ class FareRule():
         Create the SQLAlchemy table
         """
         return sa.Table(
-            'farerules', meta,
+            'fare_rules', meta,
             sa.Column('fare_id', sa.String(length=255), primary_key=True),
             sa.Column('route_id', sa.String(length=255), sa.ForeignKey("routes.route_id"), ),
             sa.Column('origin_id', sa.String(length=255)),
             sa.Column('destination_id', sa.String(length=255)),
             sa.Column('contains_id', sa.String(length=255)),
         )
+
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["fare_id"] = self.fare_id
+        ret["route_id"] = self.route_id
+        ret["origin_id"] = self.origin_id
+        ret["destination_id"] = self.destination_id
+        ret["contains_id"] = self.contains_id
+        return ret
 
     @staticmethod
     def from_dict(data):

@@ -14,7 +14,7 @@ class DatabaseConnection:
     DatabaseConnection: Handles database interactions
     """
     def __init__(self, url):
-        self.engine = sqlalchemy.create_engine(url)
+        self.engine = sqlalchemy.create_engine(url, echo=True)
         self.connection = self.engine.connect()
         self.meta = sqlalchemy.MetaData()
         self.meta.bind = self.engine
@@ -30,7 +30,6 @@ class DatabaseConnection:
         self.tables["levels"] = Level.create_table(self.meta)
         self.tables["pathways"] = Pathway.create_table(self.meta)
         self.tables["services"] = Service.create_table(self.meta)
-        self.tables["service_exceptions"] = ServiceException.create_table(self.meta)
         self.tables["shapes"] = Shape.create_table(self.meta)
         self.tables["stop_times"] = StopTime.create_table(self.meta)
         self.tables["transfers"] = Transfer.create_table(self.meta)
@@ -52,6 +51,7 @@ class DatabaseConnection:
         self.meta.create_all()
         self.write_agencies(gtfs.agencies)
         self.write_fare_attributes(gtfs.fare_attributes)
+        self.write_fare_rules(gtfs.fare_rules)
 
     def write_agencies(self, agencies):
         """
@@ -68,5 +68,14 @@ class DatabaseConnection:
         """
         for agency in fare_attributes:
             ins = sqlalchemy.sql.expression.insert(self.tables["fare_attributes"],
+                                                   values=agency.to_dict())
+            self.connection.execute(ins)
+
+    def write_fare_rules(self, fare_rules):
+        """
+        write_fare_rules: writes all instances of FareRule
+        """
+        for agency in fare_rules:
+            ins = sqlalchemy.sql.expression.insert(self.tables["fare_rules"],
                                                    values=agency.to_dict())
             self.connection.execute(ins)

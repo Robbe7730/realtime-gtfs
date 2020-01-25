@@ -7,5 +7,4 @@ create_database: set up database for use with realtime_gtfs
 from realtime_gtfs import GTFS
 
 TEST_GTFS = GTFS()
-TEST_GTFS.from_url("https://sncb-opendata.hafas.de/gtfs/static/c21ac6758dd25af84cca5b707f3cb3de")
 TEST_GTFS.write_to_db("mysql://delaymap:Treinen@localhost:3306/DelayMap", True)

@@ -58,9 +58,8 @@ class Pathway():
             sa.Column('stair_count', sa.Integer()),
             sa.Column('max_slope', sa.Float()),
             sa.Column('min_width', sa.Float()),
-            sa.Column('signposted_as', sa.String(length=255), sa.ForeignKey("stops.stop_id")),
-            sa.Column('reversed_signposted_as', sa.String(length=255),
-                      sa.ForeignKey("stops.stop_id")),
+            sa.Column('signposted_as', sa.String(length=255)),
+            sa.Column('reversed_signposted_as', sa.String(length=255)),
         )
 
     @staticmethod
