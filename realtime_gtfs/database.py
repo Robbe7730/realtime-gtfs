@@ -52,6 +52,7 @@ class DatabaseConnection:
         self.write_agencies(gtfs.agencies)
         self.write_fare_attributes(gtfs.fare_attributes)
         self.write_fare_rules(gtfs.fare_rules)
+        self.write_feed_info(gtfs.feed_info)
 
     def write_agencies(self, agencies):
         """
@@ -66,16 +67,24 @@ class DatabaseConnection:
         """
         write_fare_attributes: writes all instances of FareAttribute
         """
-        for agency in fare_attributes:
+        for attribute in fare_attributes:
             ins = sqlalchemy.sql.expression.insert(self.tables["fare_attributes"],
-                                                   values=agency.to_dict())
+                                                   values=attribute.to_dict())
             self.connection.execute(ins)
 
     def write_fare_rules(self, fare_rules):
         """
         write_fare_rules: writes all instances of FareRule
         """
-        for agency in fare_rules:
+        for fare_rule in fare_rules:
             ins = sqlalchemy.sql.expression.insert(self.tables["fare_rules"],
-                                                   values=agency.to_dict())
+                                                   values=fare_rule.to_dict())
             self.connection.execute(ins)
+
+
+    def write_feed_info(self, feedinfo):
+        """
+        write_feed_info: writes all instances of FeedInfo
+        """
+        ins = sqlalchemy.sql.expression.insert(self.tables["feed_infos"], values=feedinfo.to_dict())
+        self.connection.execute(ins)

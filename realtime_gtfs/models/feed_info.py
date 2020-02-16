@@ -55,6 +55,22 @@ class FeedInfo():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["feed_publisher_name"] = self.feed_publisher_name
+        ret["feed_publisher_url"] = self.feed_publisher_url
+        ret["feed_lang"] = self.feed_lang
+        ret["feed_start_date"] = self.feed_start_date
+        ret["feed_end_date"] = self.feed_end_date
+        ret["feed_version"] = self.feed_version
+        ret["feed_contact_email"] = self.feed_contact_email
+        ret["feed_contact_url"] = self.feed_contact_url
+        ret["default_lang"] = self.default_lang
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """
