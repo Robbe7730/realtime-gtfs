@@ -30,7 +30,9 @@ class Service():
     @staticmethod
     def create_table(meta):
         """
-        Create the SQLAlchemy table
+        Create the SQLAlchemy table, for service_exceptions, monday - sunday None,
+        start_data and end_date are the date of the exception and exception_type is set
+        (None for calendar)
         """
         return sa.Table(
             'services', meta,
@@ -42,7 +44,7 @@ class Service():
             sa.Column('friday', sa.Integer()),
             sa.Column('saturday', sa.Integer()),
             sa.Column('sunday', sa.Integer()),
-            sa.Column('start_date', sa.String(length=255)),
+            sa.Column('start_date', sa.String(length=255), primary_key=True),
             sa.Column('end_date', sa.String(length=255)),
             sa.Column('exception_type', sa.String(length=255))
         )
@@ -60,6 +62,23 @@ class Service():
         for key, value in data.items():
             ret.setkey(key, value)
         ret.verify()
+        return ret
+
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["service_id"] = self.service_id
+        ret["monday"] = self.monday
+        ret["tuesday"] = self.tuesday
+        ret["wednesday"] = self.wednesday
+        ret["thursday"] = self.thursday
+        ret["friday"] = self.friday
+        ret["saturday"] = self.saturday
+        ret["sunday"] = self.sunday
+        ret["start_date"] = self.start_date
+        ret["end_date"] = self.end_date
         return ret
 
     @staticmethod

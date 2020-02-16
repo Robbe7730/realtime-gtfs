@@ -57,6 +57,7 @@ class DatabaseConnection:
         self.write_levels(gtfs.levels)
         self.write_pathways(gtfs.pathways)
         self.write_routes(gtfs.routes)
+        self.write_services(gtfs.services, gtfs.service_exceptions)
 
     def _write_list_as_dicts(self, data_list, table_name):
         for data in data_list:
@@ -112,3 +113,18 @@ class DatabaseConnection:
         write_routes: writes all instances of Route
         """
         self._write_list_as_dicts(routes, "routes")
+
+    def write_services(self, services, service_exceptions):
+        """
+        write_services: writes all instances of Service
+        """
+        self._write_list_as_dicts(services, "services")
+        for service_exception in service_exceptions:
+            data = {}
+            data["service_id"] = service_exception.service_id
+            data["start_date"] = service_exception.date
+            data["end_date"] = service_exception.date
+            data["exception_type"] = service_exception.exception_type
+            ins = sqlalchemy.sql.expression.insert(self.tables["services"],
+                                                   values=data)
+            self.connection.execute(ins)
