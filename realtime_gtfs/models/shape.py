@@ -46,6 +46,18 @@ class Shape():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["shape_id"] = self.shape_id
+        ret["shape_pt_lat"] = self.shape_pt_lat
+        ret["shape_pt_lon"] = self.shape_pt_lon
+        ret["shape_pt_sequence"] = self.shape_pt_sequence
+        ret["shape_dist_traveled"] = self.shape_dist_traveled
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """

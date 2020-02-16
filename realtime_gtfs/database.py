@@ -58,6 +58,7 @@ class DatabaseConnection:
         self.write_pathways(gtfs.pathways)
         self.write_routes(gtfs.routes)
         self.write_services(gtfs.services, gtfs.service_exceptions)
+        self.write_shapes(gtfs.shapes)
 
     def _write_list_as_dicts(self, data_list, table_name):
         for data in data_list:
@@ -128,3 +129,9 @@ class DatabaseConnection:
             ins = sqlalchemy.sql.expression.insert(self.tables["services"],
                                                    values=data)
             self.connection.execute(ins)
+
+    def write_shapes(self, shapes):
+        """
+        write_shapes: writes all instances of Shape
+        """
+        self._write_list_as_dicts(shapes, "shapes")
