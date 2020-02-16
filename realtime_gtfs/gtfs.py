@@ -49,7 +49,7 @@ class GTFS():
         db_con = DatabaseConnection(url)
         if hard_reset:
             db_con.reset()
-        db_con.write_gtfs(self)
+        db_con.add_gtfs(self)
 
     # GTFS reading
     def get_zip(self, url):

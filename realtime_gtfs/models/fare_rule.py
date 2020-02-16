@@ -26,7 +26,8 @@ class FareRule():
         return sa.Table(
             'fare_rules', meta,
             sa.Column('fare_id', sa.String(length=255), primary_key=True),
-            sa.Column('route_id', sa.String(length=255), sa.ForeignKey("routes.route_id"), ),
+            sa.Column('route_id', sa.String(length=255), sa.ForeignKey("routes.route_id"),
+                      primary_key=True),
             sa.Column('origin_id', sa.String(length=255)),
             sa.Column('destination_id', sa.String(length=255)),
             sa.Column('contains_id', sa.String(length=255)),
@@ -77,7 +78,7 @@ class FareRule():
 
     def verify(self):
         """
-        Verify that the FareRule has at least the required keys, lat and lon are correct
+        Verify that the FareRule has at least the required keys
         """
         # TODO: verify all ids
         if self.fare_id is None:

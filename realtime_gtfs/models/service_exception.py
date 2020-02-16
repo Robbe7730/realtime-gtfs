@@ -19,12 +19,7 @@ class ServiceException():
         self.date = None
         self.exception_type = None
 
-    @staticmethod
-    def create_table(_meta):
-        """
-        ServiceException is merged with Service for the table services, nothing to be done here...
-        """
-        return
+    # ServiceException is merged with Service for the table services, no need for create_table
 
     @staticmethod
     def from_dict(data):

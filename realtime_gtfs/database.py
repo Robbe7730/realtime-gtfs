@@ -5,7 +5,7 @@ database.py: all database interactions for GTFS
 import sqlalchemy
 
 from realtime_gtfs.models import (Agency, Route, Stop, Trip, StopTime, Service,
-                                  ServiceException, FareAttribute, FareRule, Shape, Frequency,
+                                  FareAttribute, FareRule, Shape, Frequency,
                                   Transfer, Pathway, Level, FeedInfo, Translation)
 
 
@@ -44,9 +44,9 @@ class DatabaseConnection:
         self.meta.drop_all()
         self.meta.create_all()
 
-    def write_gtfs(self, gtfs):
+    def add_gtfs(self, gtfs):
         """
-        write_gtfs: Write all data of a GTFS instance to the database
+        add_gtfs: Write all data of a GTFS instance to the database
         """
         self.meta.create_all()
         self.write_agencies(gtfs.agencies)
