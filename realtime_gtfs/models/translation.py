@@ -59,6 +59,20 @@ class Translation():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["table_name"] = self.table_name
+        ret["field_name"] = self.field_name
+        ret["language"] = self.language
+        ret["translation"] = self.translation
+        ret["record_id"] = self.record_id
+        ret["record_sub_id"] = self.record_sub_id
+        ret["field_value"] = self.field_value
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """

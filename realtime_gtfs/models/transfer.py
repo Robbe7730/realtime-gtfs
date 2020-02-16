@@ -61,6 +61,21 @@ class Transfer():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["from_stop_id"] = self.from_stop_id
+        ret["to_stop_id"] = self.to_stop_id
+        ret["transfer_type"] = self.transfer_type
+        ret["min_transfer_time"] = self.min_transfer_time
+        ret["from_route_id"] = self.from_route_id
+        ret["to_route_id"] = self.to_route_id
+        ret["from_trip_id"] = self.from_trip_id
+        ret["to_trip_id"] = self.to_trip_id
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """

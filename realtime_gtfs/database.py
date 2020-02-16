@@ -61,6 +61,8 @@ class DatabaseConnection:
         self.write_shapes(gtfs.shapes)
         self.write_stop_times(gtfs.stop_times)
         self.write_stops(gtfs.stops)
+        self.write_transfers(gtfs.transfers)
+        self.write_translations(gtfs.translations)
 
     def _write_list_as_dicts(self, data_list, table_name):
         for data in data_list:
@@ -149,3 +151,15 @@ class DatabaseConnection:
         write_stops: writes all instances of Stop
         """
         self._write_list_as_dicts(stops, "stops")
+
+    def write_transfers(self, transfers):
+        """
+        write_transfers: writes all instances of Transfer
+        """
+        self._write_list_as_dicts(transfers, "transfers")
+
+    def write_translations(self, translations):
+        """
+        write_translations: writes all instances of Translation
+        """
+        self._write_list_as_dicts(translations, "translations")
