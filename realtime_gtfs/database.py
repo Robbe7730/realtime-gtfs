@@ -60,6 +60,7 @@ class DatabaseConnection:
         self.write_services(gtfs.services, gtfs.service_exceptions)
         self.write_shapes(gtfs.shapes)
         self.write_stop_times(gtfs.stop_times)
+        self.write_stops(gtfs.stops)
 
     def _write_list_as_dicts(self, data_list, table_name):
         for data in data_list:
@@ -142,3 +143,9 @@ class DatabaseConnection:
         write_stop_times: writes all instances of StopTime
         """
         self._write_list_as_dicts(stop_times, "stop_times")
+
+    def write_stops(self, stops):
+        """
+        write_stops: writes all instances of Stop
+        """
+        self._write_list_as_dicts(stops, "stops")

@@ -83,6 +83,28 @@ class Stop():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["stop_id"] = self.stop_id
+        ret["stop_code"] = self.stop_code
+        ret["stop_name"] = self.stop_name
+        ret["stop_desc"] = self.stop_desc
+        ret["stop_lat"] = self.stop_lat
+        ret["stop_lon"] = self.stop_lon
+        ret["zone_id"] = self.zone_id
+        ret["stop_url"] = self.stop_url
+        ret["location_type"] = self.location_type
+        ret["parent_station"] = self.parent_station
+        ret["stop_timezone"] = self.stop_timezone
+        ret["wheelchair_boarding"] = self.wheelchair_boarding
+        ret["level_id"] = self.level_id
+        ret["platform_code"] = self.platform_code
+        ret["vehicle_type"] = self.vehicle_type
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """
