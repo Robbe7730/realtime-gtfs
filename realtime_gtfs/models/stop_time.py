@@ -77,6 +77,23 @@ class StopTime():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["trip_id"] = self.trip_id
+        ret["arrival_time"] = self.arrival_time
+        ret["departure_time"] = self.departure_time
+        ret["stop_id"] = self.stop_id
+        ret["stop_sequence"] = self.stop_sequence
+        ret["stop_headsign"] = self.stop_headsign
+        ret["pickup_type"] = self.pickup_type
+        ret["drop_off_type"] = self.drop_off_type
+        ret["shape_dist_traveled"] = self.shape_dist_traveled
+        ret["timepoint"] = self.timepoint
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """

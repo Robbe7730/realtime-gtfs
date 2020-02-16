@@ -59,6 +59,7 @@ class DatabaseConnection:
         self.write_routes(gtfs.routes)
         self.write_services(gtfs.services, gtfs.service_exceptions)
         self.write_shapes(gtfs.shapes)
+        self.write_stop_times(gtfs.stop_times)
 
     def _write_list_as_dicts(self, data_list, table_name):
         for data in data_list:
@@ -135,3 +136,9 @@ class DatabaseConnection:
         write_shapes: writes all instances of Shape
         """
         self._write_list_as_dicts(shapes, "shapes")
+
+    def write_stop_times(self, stop_times):
+        """
+        write_stop_times: writes all instances of StopTime
+        """
+        self._write_list_as_dicts(stop_times, "stop_times")
