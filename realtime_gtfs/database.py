@@ -56,6 +56,7 @@ class DatabaseConnection:
         self.write_frequencies(gtfs.frequencies)
         self.write_levels(gtfs.levels)
         self.write_pathways(gtfs.pathways)
+        self.write_routes(gtfs.routes)
 
     def _write_list_as_dicts(self, data_list, table_name):
         for data in data_list:
@@ -105,3 +106,9 @@ class DatabaseConnection:
         write_pathways: writes all instances of Pathway
         """
         self._write_list_as_dicts(pathways, "pathways")
+
+    def write_routes(self, routes):
+        """
+        write_routes: writes all instances of Route
+        """
+        self._write_list_as_dicts(routes, "routes")

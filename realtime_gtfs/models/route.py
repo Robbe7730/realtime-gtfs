@@ -43,6 +43,22 @@ class Route():
             sa.Column('route_sort_order', sa.Integer()),
         )
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["route_id"] = self.route_id
+        ret["agency_id"] = self.agency_id
+        ret["route_short_name"] = self.route_short_name
+        ret["route_long_name"] = self.route_long_name
+        ret["route_desc"] = self.route_desc
+        ret["route_type"] = self.route_type
+        ret["route_url"] = self.route_url
+        ret["route_color"] = self.route_color
+        ret["route_text_color"] = self.route_text_color
+        ret["route_sort_order"] = self.route_sort_order
+        return ret
 
     @staticmethod
     def from_dict(data):
