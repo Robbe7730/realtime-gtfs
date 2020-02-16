@@ -60,7 +60,7 @@ class Trip():
             sa.Column('trip_headsign', sa.String(length=255)),
             sa.Column('trip_short_name', sa.String(length=255)),
             sa.Column('direction_id', sa.Integer()),
-            sa.Column('block_id', sa.String(length=255), unique=True),
+            sa.Column('block_id', sa.String(length=255)),
             sa.Column('shape_id', sa.String(length=255), sa.ForeignKey("shapes.shape_id")),
             sa.Column('wheelchair_accessible', sa.Integer()),
             sa.Column('bikes_allowed', sa.Integer()),
@@ -80,6 +80,24 @@ class Trip():
         for key, value in data.items():
             ret.setkey(key, value)
         ret.verify()
+        return ret
+
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["route_id"] = self.route_id
+        ret["service_id"] = self.service_id
+        ret["trip_id"] = self.trip_id
+        ret["trip_headsign"] = self.trip_headsign
+        ret["trip_short_name"] = self.trip_short_name
+        ret["direction_id"] = self.direction_id
+        ret["block_id"] = self.block_id
+        ret["shape_id"] = self.shape_id
+        ret["wheelchair_accessible"] = self.wheelchair_accessible
+        ret["bikes_allowed"] = self.bikes_allowed
+        ret["exceptional"] = self.exceptional
         return ret
 
     @staticmethod

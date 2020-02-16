@@ -63,6 +63,7 @@ class DatabaseConnection:
         self.write_stops(gtfs.stops)
         self.write_transfers(gtfs.transfers)
         self.write_translations(gtfs.translations)
+        self.write_trips(gtfs.trips)
 
     def _write_list_as_dicts(self, data_list, table_name):
         for data in data_list:
@@ -163,3 +164,9 @@ class DatabaseConnection:
         write_translations: writes all instances of Translation
         """
         self._write_list_as_dicts(translations, "translations")
+
+    def write_trips(self, trips):
+        """
+        write_trips: writes all instances of Trip
+        """
+        self._write_list_as_dicts(trips, "trips")
