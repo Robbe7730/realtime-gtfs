@@ -55,34 +55,31 @@ class DatabaseConnection:
         self.write_feed_info(gtfs.feed_info)
         self.write_frequencies(gtfs.frequencies)
         self.write_levels(gtfs.levels)
+        self.write_pathways(gtfs.pathways)
+
+    def _write_list_as_dicts(self, data_list, table_name):
+        for data in data_list:
+            ins = sqlalchemy.sql.expression.insert(self.tables[table_name],
+                                                   values=data.to_dict())
+            self.connection.execute(ins)
 
     def write_agencies(self, agencies):
         """
         write_agencies: writes all instances of Agency
         """
-        for agency in agencies:
-            ins = sqlalchemy.sql.expression.insert(self.tables["agencies"],
-                                                   values=agency.to_dict())
-            self.connection.execute(ins)
+        self._write_list_as_dicts(agencies, "agencies")
 
     def write_fare_attributes(self, fare_attributes):
         """
         write_fare_attributes: writes all instances of FareAttribute
         """
-        for attribute in fare_attributes:
-            ins = sqlalchemy.sql.expression.insert(self.tables["fare_attributes"],
-                                                   values=attribute.to_dict())
-            self.connection.execute(ins)
+        self._write_list_as_dicts(fare_attributes, "fare_attributes")
 
     def write_fare_rules(self, fare_rules):
         """
         write_fare_rules: writes all instances of FareRule
         """
-        for fare_rule in fare_rules:
-            ins = sqlalchemy.sql.expression.insert(self.tables["fare_rules"],
-                                                   values=fare_rule.to_dict())
-            self.connection.execute(ins)
-
+        self._write_list_as_dicts(fare_rules, "fare_rules")
 
     def write_feed_info(self, feedinfo):
         """
@@ -95,16 +92,16 @@ class DatabaseConnection:
         """
         write_frequencies: writes all instances of Frequency
         """
-        for frequency in frequencies:
-            ins = sqlalchemy.sql.expression.insert(self.tables["frequencies"],
-                                                   values=frequency.to_dict())
-            self.connection.execute(ins)
+        self._write_list_as_dicts(frequencies, "frequencies")
 
     def write_levels(self, levels):
         """
         write_levels: writes all instances of Level
         """
-        for level in levels:
-            ins = sqlalchemy.sql.expression.insert(self.tables["levels"],
-                                                   values=level.to_dict())
-            self.connection.execute(ins)
+        self._write_list_as_dicts(levels, "levels")
+
+    def write_pathways(self, pathways):
+        """
+        write_pathways: writes all instances of Pathway
+        """
+        self._write_list_as_dicts(pathways, "pathways")

@@ -77,6 +77,25 @@ class Pathway():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["pathway_id"] = self.pathway_id
+        ret["from_stop_id"] = self.from_stop_id
+        ret["to_stop_id"] = self.to_stop_id
+        ret["pathway_mode"] = self.pathway_mode
+        ret["is_bidirectional"] = self.is_bidirectional
+        ret["length"] = self.length
+        ret["traversal_time"] = self.traversal_time
+        ret["stair_count"] = self.stair_count
+        ret["max_slope"] = self.max_slope
+        ret["min_width"] = self.min_width
+        ret["signposted_as"] = self.signposted_as
+        ret["reversed_signposted_as"] = self.reversed_signposted_as
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """
