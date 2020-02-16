@@ -53,6 +53,8 @@ class DatabaseConnection:
         self.write_fare_attributes(gtfs.fare_attributes)
         self.write_fare_rules(gtfs.fare_rules)
         self.write_feed_info(gtfs.feed_info)
+        self.write_frequencies(gtfs.frequencies)
+        self.write_levels(gtfs.levels)
 
     def write_agencies(self, agencies):
         """
@@ -88,3 +90,21 @@ class DatabaseConnection:
         """
         ins = sqlalchemy.sql.expression.insert(self.tables["feed_infos"], values=feedinfo.to_dict())
         self.connection.execute(ins)
+
+    def write_frequencies(self, frequencies):
+        """
+        write_frequencies: writes all instances of Frequency
+        """
+        for frequency in frequencies:
+            ins = sqlalchemy.sql.expression.insert(self.tables["frequencies"],
+                                                   values=frequency.to_dict())
+            self.connection.execute(ins)
+
+    def write_levels(self, levels):
+        """
+        write_levels: writes all instances of Level
+        """
+        for level in levels:
+            ins = sqlalchemy.sql.expression.insert(self.tables["levels"],
+                                                   values=level.to_dict())
+            self.connection.execute(ins)

@@ -51,6 +51,18 @@ class Frequency():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["trip_id"] = self.trip_id
+        ret["start_time"] = self.start_time
+        ret["end_time"] = self.end_time
+        ret["headway_secs"] = self.headway_secs
+        ret["exact_times"] = self.exact_times
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """

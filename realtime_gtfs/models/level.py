@@ -42,6 +42,16 @@ class Level():
         ret.verify()
         return ret
 
+    def to_dict(self):
+        """
+        to_dict: turn the class into a dict
+        """
+        ret = {}
+        ret["level_id"] = self.level_id
+        ret["level_index"] = self.level_index
+        ret["level_name"] = self.level_name
+        return ret
+
     @staticmethod
     def from_gtfs(keys, data):
         """
