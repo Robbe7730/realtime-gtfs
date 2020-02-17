@@ -14,7 +14,7 @@ class DatabaseConnection:
     DatabaseConnection: Handles database interactions
     """
     def __init__(self, url):
-        self.engine = sqlalchemy.create_engine(url, echo=True)
+        self.engine = sqlalchemy.create_engine(url)
         self.connection = self.engine.connect()
         self.meta = sqlalchemy.MetaData()
         self.meta.bind = self.engine
@@ -49,21 +49,26 @@ class DatabaseConnection:
         add_gtfs: Write all data of a GTFS instance to the database
         """
         self.meta.create_all()
+
         self.write_agencies(gtfs.agencies)
-        self.write_fare_attributes(gtfs.fare_attributes)
-        self.write_fare_rules(gtfs.fare_rules)
-        self.write_feed_info(gtfs.feed_info)
-        self.write_frequencies(gtfs.frequencies)
         self.write_levels(gtfs.levels)
-        self.write_pathways(gtfs.pathways)
+
+        self.write_fare_attributes(gtfs.fare_attributes)
         self.write_routes(gtfs.routes)
-        self.write_services(gtfs.services, gtfs.service_exceptions)
-        self.write_shapes(gtfs.shapes)
-        self.write_stop_times(gtfs.stop_times)
         self.write_stops(gtfs.stops)
+        self.write_shapes(gtfs.shapes)
+        self.write_services(gtfs.services, gtfs.service_exceptions)
+
+        self.write_fare_rules(gtfs.fare_rules)
         self.write_transfers(gtfs.transfers)
-        self.write_translations(gtfs.translations)
         self.write_trips(gtfs.trips)
+        self.write_pathways(gtfs.pathways)
+
+        self.write_stop_times(gtfs.stop_times)
+        self.write_frequencies(gtfs.frequencies)
+
+        self.write_feed_info(gtfs.feed_info)
+        self.write_translations(gtfs.translations)
 
     def _write_list_as_dicts(self, data_list, table_name):
         for data in data_list:
@@ -93,8 +98,10 @@ class DatabaseConnection:
         """
         write_feed_info: writes all instances of FeedInfo
         """
-        ins = sqlalchemy.sql.expression.insert(self.tables["feed_infos"], values=feedinfo.to_dict())
-        self.connection.execute(ins)
+        if feedinfo is not None:
+            ins = sqlalchemy.sql.expression.insert(self.tables["feed_infos"],
+                                                   values=feedinfo.to_dict())
+            self.connection.execute(ins)
 
     def write_frequencies(self, frequencies):
         """
